@@ -13,10 +13,9 @@ public:
         cout << "x = " << x << " , y = " << y << endl;
     }
 
-    Sample operator ++() {
+    void operator ++() {
         ++x;
         ++y;
-        return *this;
     }
 };
 

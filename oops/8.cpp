@@ -1,49 +1,64 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-class shape{
+class Shape {
 public:
-void display(){
-cout<<"This is shape"<<endl;
-}
-};
-class polygon:public shape{
-public:
-void display(){
-cout<<"Polygon is a shape"<<endl;
-}
-};
-class rectangle:public polygon{
-public:
-void display(){
-cout<<"Rectangle is a polygon"<<endl;
-}
-};
-class triangle:public polygon{
-public:
-void display(){
-cout<<"triangle is a polygon"<<endl;
-}
-};
-class square:public rectangle{
-public:
-void display(){
-cout<<"square is a rectangle"<<endl;
-}
+    virtual void display() {
+        cout << "This is a shape" << endl;
+    }
 };
 
-int main(){
-shape s;
-polygon p;
-rectangle r;
-triangle t;
-square sq;
+class Polygon : public Shape {
+public:
+    void display() {
+        cout << "Polygon is a shape" << endl;
+    }
+};
 
-s.display();
-p.display();
-r.display();
-t.display();
-sq.display();
+class Rectangle : public Polygon {
+public:
+    void display() {
+        cout << "Rectangle is a polygon" << endl;
+    }
+};
 
-return 0;
+class Triangle : public Polygon {
+public:
+    void display() {
+        cout << "Triangle is a polygon" << endl;
+    }
+};
+
+class Square : public Rectangle {
+public:
+    void display() {
+        cout << "Square is a rectangle" << endl;
+    }
+};
+
+int main() {
+    Shape* ptr;
+
+    Shape s;
+    Polygon p;
+    Rectangle r;
+    Triangle t;
+    Square sq;
+
+    ptr = &s;
+    ptr->display();
+
+    ptr = &p;
+    ptr->display();
+
+    ptr = &r;
+    ptr->display();
+
+    ptr = &t;
+    ptr->display();
+
+    ptr = &sq;
+    ptr->display();
+
+    return 0;
 }

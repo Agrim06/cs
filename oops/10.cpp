@@ -1,30 +1,29 @@
 #include <iostream>
 using namespace std;
 
-class vechicle{
+class Vehicle {
 public:
-void vech(){
-cout<<"I am vechicle"<<endl;
-}
-};
-class fourwheel:public vechicle{
-public:
-void four(){
-cout<<" I am fourwheel"<<endl;
-}
-};
-class car:public fourwheel{
-public:
-void Car(){
-cout<<"I am car"<<endl;
-}
+    virtual void display() {
+        cout << "I am a vehicle" << endl;
+    }
 };
 
-int main(){
-car c;
-c.Car();
-c.four();
-c.vech();
-return 0;
-}
+class FourWheeler : public Vehicle {
+public:
+    void display() {
+        cout << "I have four wheels" << endl;
+    }
+};
 
+class Car : public FourWheeler {
+public:
+    void display() {
+        cout << "I am a car" << endl;
+    }
+};
+
+int main() {
+    Car c;
+    c.display();  
+    return 0;
+}

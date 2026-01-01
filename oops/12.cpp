@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 using namespace std;
 
 class Person {
@@ -9,7 +8,7 @@ public:
 
     void readPerson() {
         cout << "Enter name: ";
-        getline(cin, name);
+        cin>>name;
         cout << "Enter age: ";
         cin >> age;
     }
@@ -44,11 +43,10 @@ public:
     string designation;
 
     void readManager() {
-        cin.ignore();
         cout << "Enter department: ";
-        getline(cin, department);
+        cin>> department;
         cout << "Enter designation: ";
-        getline(cin, designation);
+        cin>> designation;
     }
 
     void displayManager() {

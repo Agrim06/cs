@@ -1,61 +1,56 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
-class employee{
-    int eno;
-    string name;
-    float basic,da,it,net;
-    
-    public : void read();
-                 void calc();
-                 void print();
+
+class BANK_ACCOUNT {
+private:
+    int accountNumber;
+    string accountHolderName;
+    float balance , interest ,  finalBalance;
+
+public:
+    void read() {
+        cout << "Enter Account Number: ";
+        cin >> accountNumber;
+
+        cout << "Enter Account Holder Name: ";
+        cin >> accountHolderName;
+
+        cout << "Enter Balance: ";
+        cin >> balance;
+    }
+
+    void calculate() {
+        interest = 0.05 * balance;
+        finalBalance = balance + interest;
+    }
+
+    void display() {
+        cout << "\nAccount Number   : " << accountNumber;
+        cout << "\nAccount Holder   : " << accountHolderName;
+        cout << "\nBalance          : " << balance;
+        cout << "\nInterest (5%)    : " << interest;
+        cout << "\nFinal Balance    : " << finalBalance << endl;
+    }
 };
 
-void employee :: read()
-{
-      cout<<"\nEnter Employee Number : ";
-      cin>>eno;
-      cout<<"Enter Employee Name ";
-      cin>>name;
-      cout<<"Enter basic salary :";
-      cin>>basic;
-}
+int main() {
+    int n;
 
-void employee::calc()
-{
-      da=0.52*basic;
-      float gross=basic+da;
-      it=0.30*gross;
-      net=gross-it;
-}
+    cout << "Enter number of account holders: ";
+    cin >> n;
 
-void employee::print()
-{
-      cout<<"\nEmployee Number :"<<eno;
-      cout<<"\nEmployee Name :"<<name;
-      cout<<"\nBasic :"<<basic;
-      cout<<"\nDA :"<<da;
-      cout<<"\nIT :"<<it;
-      cout<<"\nNet Salary :"<<net<<endl;
-}
+    BANK_ACCOUNT accounts[n];
 
-int main()
-{
-        int n;
-        cout<<"Enter number of employees :";
-        cin>>n;
-        employee e[50];
-        for(int i=0;i<n;i++)
-        {
-               cout<<"\nEnter the details of employee "<<i+1<<" : ";
-               e[i].read();
-               e[i].calc();
-               
-        }
-        
-        cout<<"\n - - - Employee Details ---\n";
-        for(int i=0;i<n;i++) {
-              e[i].print();
-        }
-              
-        return 0; 
+    for (int i = 0; i < n; i++) {
+        cout << "\nEnter details for Account Holder " << i + 1 << endl;
+        accounts[i].read();
+        accounts[i].calculate();
+    }
+
+    cout << "\n\n--- Account Details ---";
+    for (int i = 0; i < n; i++) {
+        accounts[i].display();
+    }
+
+    return 0;
 }

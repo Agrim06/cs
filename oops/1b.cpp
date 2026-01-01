@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
 int main(){
@@ -7,7 +6,7 @@ int main(){
 	cout<<"Enter number of elements:";
 	cin>>n;
 
-	std::vector<int> arr(n);
+	int arr[n];
 	cout<<"Enter "<<n<<" Elements";
 	for(int i=0; i<n; i++){
 		cin>>arr[i];

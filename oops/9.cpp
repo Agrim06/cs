@@ -10,10 +10,7 @@ public:
     }
 
     void display() {
-        if (imag >= 0)
-            cout << real << " + " << imag << "i";
-        else
-            cout << real << " - " << -imag << "i";
+        cout << real << " + " << imag << "i";
     }
 
     Complex operator + (Complex c) {
