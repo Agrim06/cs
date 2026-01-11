@@ -3,43 +3,49 @@
 #include<math.h>
 #include<ctype.h>
 #include<string.h>
+
 #define MAX 30
 
-struct stack{
+struct cstack{
     char st[MAX];
     int top;
 };
 
-void initstack(struct stack* s){
+struct istack{
+    int st[MAX];
+    int top;
+};
+
+void initcstack(struct cstack* s){
     s->top = -1;
 }
 
-int isEmpty(struct stack* s){
-    return (s->top == -1);
+int isEmptyC(struct cstack* s){
+    return s->top == -1;
 }
 
-int isFull(struct stack* s){
-    return (s->top == MAX-1);
+void pushC(struct cstack* s, char val){
+    s->st[++s->top] = val;
 }
 
-void push(struct stack* s, char val){
-    if(isFull(s)) return;
-    else{
-        s->st[++s->top] = val;
-    }
+char popC(struct cstack* s){
+    return s->st[s->top--];
 }
 
-char pop(struct stack* s){
-    if(isEmpty(s)) return;
-    char top = s->st[s->top];
-    s->top--;
-    return top;
+char peekC(struct cstack* s){
+    return s->st[s->top];
 }
 
-char peek(struct stack* s){
-    if(isEmpty(s)) return;
-    char top = s->st[s->top];
-    return top;
+void initIstack(struct istack* s){
+    s->top = -1;
+}
+
+void pushI(struct istack* s, int val){
+    s->st[++s->top] = val;
+}
+
+int popI(struct istack* s){
+    return s->st[s->top--];
 }
 
 int precedence(char op){
@@ -48,63 +54,67 @@ int precedence(char op){
         case '-': return 1;
         case '*':
         case '/':
-        case '%': return 2;      
+        case '%': return 2;
         case '^': return 3;
-        default: return 0;        
+    }
+    return 0;
+}
+
+void reverse(char str[]){
+    int i = 0, j = strlen(str) - 1;
+    while(i < j){
+        char t = str[i];
+        str[i] = str[j];
+        str[j] = t;
+        i++;
+        j--;
     }
 }
 
-void reverse(char infix[]){
-    for(int i = 0; i < strlen(infix) -1 ;i++){
-        char temp = infix[i];
-        infix[i] =  infix[strlen(infix) - i];
-        infix[strlen(infix) - i] = temp;
+void swapbrackets(char str[]){
+    for(int i = 0; str[i] != '\0'; i++){
+        if(str[i] == '(') str[i] = ')';
+        else if(str[i] == ')') str[i] = '(';
     }
 }
 
-void swapbrackets(char infix[]){
-    for(int i = 0; i < strlen(infix) -1 ;i++){
-        if(infix[i] == '(') infix[i] = ')';
-        if(infix[i] == ')') infix[i] = '(';
-    }
-}
-void infixtoprefix(char infix[] , char prefix[]){
-    char temp[MAX] , postfix[MAX];
-    struct stack s;
-    initstack(&s);
+void infixtoprefix(char infix[], char prefix[]){
+    char temp[MAX], postfix[MAX];
+    struct cstack s;
+    initcstack(&s);
 
     strcpy(temp, infix);
     reverse(temp);
     swapbrackets(temp);
 
-    int i =0, k=0;
+    int i = 0, k = 0;
     char ch;
-    while((ch = temp[i++])!='\0' ){
+
+    while((ch = temp[i++]) != '\0'){
         if(isalnum(ch)){
             postfix[k++] = ch;
-        }else if(ch =='('){
-           push(&s,ch);
-        }else if(ch== ')'){
-            pop(&s);
-            while(peek(&s) != '( ' && !isEmpty(&s)){
-                postfix[k++] = pop(&s);
-            }
-            pop(&s);
-        }else{
-            while(!isEmpty(&s) && precedence(peek(&s) > precedence(ch)) ){
-                postfix[k++] = pop(&s);
-            }
-            push(&s , ch);
+        }
+        else if(ch == '('){
+            pushC(&s, ch);
+        }
+        else if(ch == ')'){
+            while(peekC(&s) != '(')
+                postfix[k++] = popC(&s);
+            popC(&s);
+        }
+        else{
+            while(!isEmptyC(&s) && precedence(peekC(&s)) > precedence(ch))
+                postfix[k++] = popC(&s);
+            pushC(&s, ch);
         }
     }
 
-    while(!isEmpty(&s)){
-        postfix[k++] = pop(&s);
-    }
-    postfix[k] = '\0';
+    while(!isEmptyC(&s))
+        postfix[k++] = popC(&s);
 
+    postfix[k] = '\0';
     reverse(postfix);
-    strcpy(prefix ,postfix);
+    strcpy(prefix, postfix);
 }
 
 int applyOperator(int a, int b, char op){
@@ -118,59 +128,49 @@ int applyOperator(int a, int b, char op){
     return 0;
 }
 
-int evaluate(int prefix[]){
-    struct stack s;
-    initstack(&s);
+int evaluatePrefix(char prefix[]){
+    struct istack s;
+    initIstack(&s);
 
-    int i = strlen(prefix) -1;
-    char ch;
-
-    while(i >=0){
-        ch = prefix[i--];
+    for(int i = strlen(prefix) - 1; i >= 0; i--){
+        char ch = prefix[i];
 
         if(isdigit(ch)){
-            push(&s ,ch-'0');
+            pushI(&s, ch - '0');
         }
         else{
-            int a = pop(&s);
-            int b = pop(&s);
-            int res = applyOperator(a,b,ch);
-
-            push(&s, res);
+            int a = popI(&s);
+            int b = popI(&s);
+            pushI(&s, applyOperator(a, b, ch));
         }
     }
-    return pop(&s);
+    return popI(&s);
 }
 
 int main(){
     char infix[MAX], prefix[MAX];
-    int choice, result;
+    int choice;
 
     while(1){
         printf("\n1.Infix to Prefix");
         printf("\n2.Evaluate Prefix");
-        printf("\n3.Exit");
-        printf("\nEnter choice: ");
+        printf("\n3.Exit\n");
         scanf("%d", &choice);
 
         switch(choice){
             case 1:
                 printf("Enter Infix Expression: ");
                 scanf("%s", infix);
-                infixToPrefix(infix, prefix);
+                infixtoprefix(infix, prefix);
                 printf("Prefix Expression: %s\n", prefix);
                 break;
 
             case 2:
-                result = evaluatePrefix(prefix);
-                printf("Evaluation Result: %d\n", result);
+                printf("Evaluation Result: %d\n", evaluatePrefix(prefix));
                 break;
 
             case 3:
                 exit(0);
-
-            default:
-                printf("Invalid choice\n");
         }
     }
 }
