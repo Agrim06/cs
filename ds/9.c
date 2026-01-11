@@ -7,7 +7,7 @@ struct Node{
 };
 
 struct CSLL{
-    struct Node* head;
+    struct Node* head; 
     int size;
 };
 
@@ -19,79 +19,128 @@ struct Node* createnode(int val){
 }
 
 void initlist(struct CSLL* list){
-    list->head = createnode(0);
-    list->head->next = list->head;
+    list->head = createnode(0);  
+    list->head->next = NULL;      
     list->size = 0;
 }
 
-void display(struct CSLL* list){
-    struct Node* temp = list->head->next;
 
-    if(temp == list->head){
+void display(struct CSLL* list){
+    if(list->head->next == NULL){
         printf("List Empty\n");
         return;
     }
 
-    while(temp != list->head){
+    struct Node* temp = list->head->next;
+
+    do{
         printf("%d -> ", temp->data);
         temp = temp->next;
-    }
-    printf("HEAD\n");
+    }while(temp != list->head->next);
+
+    printf("START\n");
 }
+
 
 void insertordered(struct CSLL* list, int val){
     struct Node* temp = createnode(val);
-    struct Node* p = list->head;
 
-    while(p->next != list->head && p->next->data < val)
-        p = p->next;
+    if(list->head->next == NULL){
+        list->head->next = temp;
+        temp->next = temp;
+    }
+    else{
+        struct Node* p = list->head->next;
+        struct Node* prev = NULL;
 
-    temp->next = p->next;
-    p->next = temp;
+        do{
+            if(p->data >= val)
+                break;
+            prev = p;
+            p = p->next;
+        }while(p != list->head->next);
+
+        if(prev == NULL){
+     
+            struct Node* last = list->head->next;
+            while(last->next != list->head->next)
+                last = last->next;
+
+            temp->next = list->head->next;
+            list->head->next = temp;
+            last->next = temp;
+        }
+        else{
+            prev->next = temp;
+            temp->next = p;
+        }
+    }
     list->size++;
-
     display(list);
 }
+
 
 void deleterear(struct CSLL* list){
-    if(list->head->next == list->head){
+    if(list->head->next == NULL){
         printf("List Empty\n");
         return;
     }
 
-    struct Node* p = list->head;
+    struct Node* first = list->head->next;
 
-    while(p->next->next != list->head)
-        p = p->next;
+    if(first->next == first){
+        free(first);
+        list->head->next = NULL;
+    }
+    else{
+        struct Node* prev = NULL;
+        struct Node* curr = first;
 
-    free(p->next);
-    p->next = list->head;
+        while(curr->next != first){
+            prev = curr;
+            curr = curr->next;
+        }
+        prev->next = first;
+        free(curr);
+    }
     list->size--;
-
     display(list);
 }
+
 
 void deletefront(struct CSLL* list){
-    if(list->head->next == list->head){
+    if(list->head->next == NULL){
         printf("List Empty\n");
         return;
     }
 
-    struct Node* temp = list->head->next;
-    list->head->next = temp->next;
-    free(temp);
-    list->size--;
+    struct Node* first = list->head->next;
 
+    if(first->next == first){
+        free(first);
+        list->head->next = NULL;
+    }
+    else{
+        struct Node* last = first;
+        while(last->next != first)
+            last = last->next;
+
+        list->head->next = first->next;
+        last->next = list->head->next;
+        free(first);
+    }
+    list->size--;
     display(list);
 }
 
+
 void reverse(struct CSLL* list){
-    if(list->head->next == list->head || list->head->next->next == list->head){
+    if(list->head->next == NULL || list->head->next->next == list->head->next){
         display(list);
         return;
     }
 
-    struct Node *prev = list->head, *curr = list->head->next, *next;
+    struct Node *prev = NULL, *curr = list->head->next, *next;
     struct Node* first = curr;
 
     do{
@@ -99,13 +148,14 @@ void reverse(struct CSLL* list){
         curr->next = prev;
         prev = curr;
         curr = next;
-    }while(curr != list->head);
+    }while(curr != list->head->next);
 
+    first->next = prev;
     list->head->next = prev;
-    first->next = list->head;
 
     display(list);
 }
+
 
 int main(){
     struct CSLL list;

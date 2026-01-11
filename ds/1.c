@@ -10,60 +10,6 @@ struct Student {
 };
 
 
-void readStudents(struct Student *s, int n);
-void displayStudents(struct Student *s, int n);
-void calculateAverage(struct Student *s, int n);
-void sortByRegNo(struct Student *s, int n);
-
-int main() {
-    struct Student *students;
-    int n, choice;
-
-    printf("Enter number of students: ");
-    scanf("%d", &n);
-    students = (struct Student *)malloc(n * sizeof(struct Student));
-
-    if (students == NULL) {
-        printf("Memory allocation failed!\n");
-        return 1;
-    }
-
-    do {
-        printf("\n========== STUDENT MENU ==========\n");
-        printf("1. Read Student Information\n");
-        printf("2. Display Student Information\n");
-        printf("3. Calculate Average of Best Two Tests\n");
-        printf("4. Sort Students by Reg_No\n");
-        printf("0. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1:
-                readStudents(students, n);
-                break;
-            case 2:
-                displayStudents(students, n);
-                break;
-            case 3:
-                calculateAverage(students, n);
-                printf("Average calculated successfully.\n");
-                break;
-            case 4:
-                sortByRegNo(students, n);
-                printf("Students sorted by Reg_No.\n");
-                break;
-            case 0:
-                printf("Program terminated.\n");
-                break;
-            default:
-                printf("Invalid choice!\n");
-        }
-    } while (choice != 0);
-
-    free(students);
-    return 0;
-}
 void readStudents(struct Student *s, int n) {
     for (int i = 0; i < n; i++) {
         printf("\nStudent %d\n", i + 1);
@@ -115,4 +61,54 @@ void sortByRegNo(struct Student *s, int n) {
             }
         }
     }
+}
+
+int main() {
+    struct Student *students;
+    int n, choice;
+
+    printf("Enter number of students: ");
+    scanf("%d", &n);
+    students = (struct Student *)malloc(n * sizeof(struct Student));
+
+    if (students == NULL) {
+        printf("Memory allocation failed!\n");
+        return 1;
+    }
+
+    do {
+        printf("\n========== STUDENT MENU ==========\n");
+        printf("1. Read Student Information\n");
+        printf("2. Display Student Information\n");
+        printf("3. Calculate Average of Best Two Tests\n");
+        printf("4. Sort Students by Reg_No\n");
+        printf("0. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                readStudents(students, n);
+                break;
+            case 2:
+                displayStudents(students, n);
+                break;
+            case 3:
+                calculateAverage(students, n);
+                printf("Average calculated successfully.\n");
+                break;
+            case 4:
+                sortByRegNo(students, n);
+                printf("Students sorted by Reg_No.\n");
+                break;
+            case 0:
+                printf("Program terminated.\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while (choice != 0);
+
+    free(students);
+    return 0;
 }

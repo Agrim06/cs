@@ -4,61 +4,7 @@
 int *arr = NULL;
 int n = 0;        
 int capacity;      
-void insertByOrder();
-void deleteByPosition();
-void searchByKey();
-void reverseArray();
-void display();
 
-int main() {
-    int choice;
-
-    printf("Enter initial capacity of array: ");
-    scanf("%d", &capacity);
-
-    arr = (int *)malloc(capacity * sizeof(int));
-    if (arr == NULL) {
-        printf("Memory allocation failed!\n");
-        return 1;
-    }
-
-    do {
-        printf("\n========= ARRAY MENU =========\n");
-        printf("1. Insert by Order\n");
-        printf("2. Delete by Position\n");
-        printf("3. Search by Key\n");
-        printf("4. Reverse the Array\n");
-        printf("0. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1:
-                insertByOrder();
-                display();
-                break;
-            case 2:
-                deleteByPosition();
-                display();
-                break;
-            case 3:
-                searchByKey();
-                break;
-            case 4:
-                reverseArray();
-                display();
-                break;
-            case 0:
-                printf("Program terminated.\n");
-                break;
-            default:
-                printf("Invalid choice!\n");
-        }
-    } while (choice != 0);
-
-    free(arr);
-    return 0;
-}
 void insertByOrder() {
     int order, value;
 
@@ -151,4 +97,54 @@ void display() {
     for (int i = 0; i < n; i++)
         printf("%d ", arr[i]);
     printf("\n");
+}
+
+int main() {
+    int choice;
+
+    printf("Enter initial capacity of array: ");
+    scanf("%d", &capacity);
+
+    arr = (int *)malloc(capacity * sizeof(int));
+    if (arr == NULL) {
+        printf("Memory allocation failed!\n");
+        return 1;
+    }
+
+    do {
+        printf("\n========= ARRAY MENU =========\n");
+        printf("1. Insert by Order\n");
+        printf("2. Delete by Position\n");
+        printf("3. Search by Key\n");
+        printf("4. Reverse the Array\n");
+        printf("0. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                insertByOrder();
+                display();
+                break;
+            case 2:
+                deleteByPosition();
+                display();
+                break;
+            case 3:
+                searchByKey();
+                break;
+            case 4:
+                reverseArray();
+                display();
+                break;
+            case 0:
+                printf("Program terminated.\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while (choice != 0);
+
+    free(arr);
+    return 0;
 }

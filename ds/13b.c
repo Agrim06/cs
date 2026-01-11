@@ -1,27 +1,27 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-struct PQueue{
+struct Queue{
     int *arr;
     int size;
     int count;
 };
 
-void initqueue(struct PQueue* q, int n){
+void initqueue(struct Queue* q, int n){
     q->size = n;
     q->count = 0;
     q->arr = (int*)malloc(n * sizeof(int));
 }
 
-int isFull(struct PQueue* q){
+int isFull(struct Queue* q){
     return q->count == q->size;
 }
 
-int isEmpty(struct PQueue* q){
+int isEmpty(struct Queue* q){
     return q->count == 0;
 }
 
-void enqueue(struct PQueue* q, int val){
+void enqueue(struct Queue* q, int val){
     if(isFull(q)){
         printf("Queue Overflow\n");
         return;
@@ -36,7 +36,7 @@ void enqueue(struct PQueue* q, int val){
     q->count++;
 }
 
-void dequeue(struct PQueue* q){
+void dequeue(struct Queue* q){
     if(isEmpty(q)){
         printf("Queue Underflow\n");
         return;
@@ -47,7 +47,7 @@ void dequeue(struct PQueue* q){
     q->count--;
 }
 
-void display(struct PQueue* q){
+void display(struct Queue* q){
     if(isEmpty(q)){
         printf("Queue Empty\n");
         return;
@@ -58,7 +58,7 @@ void display(struct PQueue* q){
 }
 
 int main(){
-    struct PQueue q;
+    struct Queue q;
     int n, ch, val;
 
     printf("Enter queue size: ");

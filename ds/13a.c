@@ -1,26 +1,26 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-struct CQueue{
+struct Queue{
     int *arr;
     int front, rear, size;
 };
 
-void initqueue(struct CQueue* q, int n){
+void initqueue(struct Queue* q, int n){
     q->size = n;
     q->front = q->rear = -1;
     q->arr = (int*)malloc(n * sizeof(int));
 }
 
-int isEmpty(struct CQueue* q){
+int isEmpty(struct Queue* q){
     return q->front == -1;
 }
 
-int isFull(struct CQueue* q){
+int isFull(struct Queue* q){
     return ((q->rear + 1) % q->size == q->front);
 }
 
-void enqueue(struct CQueue* q, int val){
+void enqueue(struct Queue* q, int val){
     if(isFull(q)){
         printf("Queue Overflow\n");
         return;
@@ -31,7 +31,7 @@ void enqueue(struct CQueue* q, int val){
     q->arr[q->rear] = val;
 }
 
-void dequeue(struct CQueue* q){
+void dequeue(struct Queue* q){
     if(isEmpty(q)){
         printf("Queue Underflow\n");
         return;
@@ -44,7 +44,7 @@ void dequeue(struct CQueue* q){
         q->front = (q->front + 1) % q->size;
 }
 
-void display(struct CQueue* q){
+void display(struct Queue* q){
     if(isEmpty(q)){
         printf("Queue Empty\n");
         return;
@@ -60,7 +60,7 @@ void display(struct CQueue* q){
 }
 
 int main(){
-    struct CQueue q;
+    struct Queue q;
     int n, ch, val;
 
     printf("Enter queue size: ");
