@@ -1,155 +1,143 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<ctype.h>
 #include<math.h>
-#include<string.h>
+#include<ctype.h>
+#define MAX 10
 
-#define MAX 50
-
-struct cstack{
-    char st[MAX];
+struct stack{
     int top;
+    int arr[MAX];
 };
 
-struct istack{
-    int st[MAX];
-    int top;
-};
-
-void initcstack(struct cstack* s){
+void init(struct stack *s){
     s->top = -1;
 }
 
-void pushc(struct cstack* s, char val){
-    if(s->top < MAX-1)
-        s->st[++s->top] = val;
+int isEmpty(struct stack *s){
+    return s->top == -1;
 }
 
-char popc(struct cstack* s){
-    if(s->top == -1)
-        return '\0';
-    return s->st[s->top--];
+int isFull(struct stack *s){
+    return s->top == MAX -1;
 }
 
-char peekc(struct cstack* s){
-    if(s->top == -1)
-        return '\0';
-    return s->st[s->top];
+int pop(struct stack *s){
+    if(isEmpty(s)) return -1;
+    
+    return s->arr[s->top--];
 }
 
-void initistack(struct istack* s){
-    s->top = -1;
+void push(struct stack *s , int val){
+    if(isFull(s)) return;
+    s->arr[++s->top] = val;
 }
 
-void pushi(struct istack* s, int val){
-    if(s->top < MAX-1)
-        s->st[++s->top] = val;
+int peek(struct stack *s){
+     if(isEmpty(s)) return -1;
+     
+     return s->arr[s->top];
 }
 
-int popi(struct istack* s){
-    if(s->top == -1)
-        return 0;
-    return s->st[s->top--];
-}
-
-int precedence(char op){
-    switch(op){
+int prec(char ch){
+    switch(ch){
         case '+':
         case '-': return 1;
+        case '/':
         case '*':
-        case '/': return 2;
+        case '%': return 2;
         case '^': return 3;
+        default: return 0;
     }
-    return 0;
 }
 
-void infixtopostfix(char infix[], char postfix[]){
-    struct cstack s;
-    initcstack(&s);
+int applyop(char ch , int a , int b){
+    switch(ch){
+        case '+': return a + b;
+        case '-': return a - b;
+        case '/': return a / b;
+        case '*': return a * b;
+        case '%': return a % b ;
+        case '^': return pow(a,b);
+        default: return 0;
+    }
+}
 
-    int i = 0, k = 0;
+void infixtopostfix(char infix[MAX] , char postfix[MAX] ){
+    
+    struct stack s;
+    init(&s);
     char ch;
-
+    int i =0 , k =0;
+    
     while((ch = infix[i++]) != '\0'){
         if(isalnum(ch)){
             postfix[k++] = ch;
+        }else if(ch == '('){
+            push(&s ,ch);
+        }else if(ch == ')'){
+            while(peek(&s) != '('){
+                postfix[k++] = pop(&s);
+            }
+            pop(&s);
+        }else{
+            while(!isEmpty(&s) && (prec(peek(&s)) >= prec(ch))){
+                postfix[k++] = pop(&s);
+            }
+            push(&s , ch);
         }
-        else if(ch == '('){
-            pushc(&s, ch);
-        }
-        else if(ch == ')'){
-            while(peekc(&s) != '(')
-                postfix[k++] = popc(&s);
-            popc(&s);
-        }
-        else{
-            while(precedence(peekc(&s)) >= precedence(ch))
-                postfix[k++] = popc(&s);
-            pushc(&s, ch);
-        }
+        
     }
-
-    while(s.top != -1)
-        postfix[k++] = popc(&s);
-
+    while(!isEmpty(&s)){
+        postfix[k++] = pop(&s);
+    }
     postfix[k] = '\0';
 }
 
-int applyoperator(int a, int b, char op){
-    switch(op){
-        case '+': return a + b;
-        case '-': return a - b;
-        case '*': return a * b;
-        case '/': return a / b;
-        case '^': return pow(a, b);
-    }
-    return 0;
-}
-
-int evaluatePostfix(char postfix[]){
-    struct istack s;
-    initistack(&s);
-
-    for(int i = 0; postfix[i] != '\0'; i++){
-        char ch = postfix[i];
-
+int evaluate(char postfix[MAX]){
+    struct stack s;
+    init(&s);
+    
+    int i =0;
+    char ch;
+    
+    while((ch = postfix[i++]) != '\0'){
         if(isdigit(ch)){
-            pushi(&s, ch - '0');
-        }
-        else{
-            int b = popi(&s);
-            int a = popi(&s);
-            pushi(&s, applyoperator(a, b, ch));
-        }
+            push(&s, ch-'0');
+        }else{
+            int b = pop(&s);
+            int a = pop(&s);
+            push(&s ,applyop(ch , a , b));
+        }        
     }
-    return popi(&s);
+    return pop(&s);
 }
 
 int main(){
     char infix[MAX], postfix[MAX];
-    int choice;
-
+    int ch , result;
+    
     while(1){
         printf("\n1.Infix to Postfix");
         printf("\n2.Evaluate Postfix");
         printf("\n3.Exit");
         printf("\nEnter choice: ");
-        scanf("%d", &choice);
-
-        switch(choice){
+        scanf("%d", &ch);
+        
+        switch(ch){
             case 1:
-                printf("Enter Infix Expression: ");
-                scanf("%s", infix);
-                infixtopostfix(infix, postfix);
-                printf("Postfix Expression: %s\n", postfix);
-                break;
-
+                    printf("\nEnter infix expression: ");
+                    scanf("%s", infix);
+                    infixtopostfix(infix , postfix);
+                    printf("\nPostfix Expression is: %s ",postfix);
+                    break;
             case 2:
-                printf("Evaluation Result: %d\n", evaluatePostfix(postfix));
-                break;
-
-            case 3:
-                exit(0);
+                    result = evaluate(postfix);
+                    printf("\n%d", result);
+                    break;
+            case 3: exit(0);
+            default: return 0;
         }
     }
 }
+
+

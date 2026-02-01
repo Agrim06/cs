@@ -1,13 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-// BST Node
 struct Node {
     int data;
     struct Node *left, *right;
 };
 
-// Create new node
 struct Node* createNode(int data) {
     struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
     temp->data = data;
@@ -15,7 +12,6 @@ struct Node* createNode(int data) {
     return temp;
 }
 
-// Insert into BST (recursive)
 struct Node* insert(struct Node* root, int data) {
     if (root == NULL)
         return createNode(data);
@@ -28,7 +24,6 @@ struct Node* insert(struct Node* root, int data) {
     return root;
 }
 
-// Search a key in BST
 struct Node* search(struct Node* root, int key) {
     if (root == NULL || root->data == key)
         return root;
@@ -39,14 +34,12 @@ struct Node* search(struct Node* root, int key) {
         return search(root->right, key);
 }
 
-// Find minimum node (used in deletion)
 struct Node* findMin(struct Node* root) {
     while (root->left != NULL)
         root = root->left;
     return root;
 }
 
-// Delete a node from BST
 struct Node* deleteNode(struct Node* root, int key) {
     if (root == NULL)
         return root;
@@ -56,7 +49,6 @@ struct Node* deleteNode(struct Node* root, int key) {
     else if (key > root->data)
         root->right = deleteNode(root->right, key);
     else {
-        // Case 1 & 2: Leaf node or one child
         if (root->left == NULL) {
             struct Node* temp = root->right;
             free(root);
@@ -68,7 +60,6 @@ struct Node* deleteNode(struct Node* root, int key) {
             return temp;
         }
 
-        // Case 3: Two children
         struct Node* temp = findMin(root->right);
         root->data = temp->data;
         root->right = deleteNode(root->right, temp->data);
@@ -76,7 +67,6 @@ struct Node* deleteNode(struct Node* root, int key) {
     return root;
 }
 
-// DFS Traversals
 void inorder(struct Node* root) {
     if (root != NULL) {
         inorder(root->left);
@@ -101,7 +91,6 @@ void postorder(struct Node* root) {
     }
 }
 
-// BFS / Level Order Traversal
 void levelOrder(struct Node* root) {
     if (root == NULL)
         return;
@@ -121,13 +110,12 @@ void levelOrder(struct Node* root) {
             queue[rear++] = temp->right;
     }
 }
-
-// Main Menu
+    
 int main() {
     struct Node* root = NULL;
     int choice, data, key;
 
-    do {
+    for(;;) {
         printf("\n--- BINARY SEARCH TREE MENU ---\n");
         printf("1. Insert\n");
         printf("2. DFS Traversals\n");
@@ -188,7 +176,7 @@ int main() {
         default:
             printf("Invalid choice!\n");
         }
-    } while (choice != 6);
+    }
 
     return 0;
 }

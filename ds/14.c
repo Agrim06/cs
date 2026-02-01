@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// BST Node Structure
 struct Node {
     int data;
     struct Node *left, *right;
 };
 
-// Create new node
 struct Node* createNode(int data) {
     struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
     temp->data = data;
@@ -15,7 +13,6 @@ struct Node* createNode(int data) {
     return temp;
 }
 
-// Insert into BST
 struct Node* insert(struct Node* root, int data) {
     if (root == NULL)
         return createNode(data);
@@ -28,7 +25,6 @@ struct Node* insert(struct Node* root, int data) {
     return root;
 }
 
-// Inorder Traversal (DFS)
 void inorder(struct Node* root) {
     if (root != NULL) {
         inorder(root->left);
@@ -37,7 +33,6 @@ void inorder(struct Node* root) {
     }
 }
 
-// Preorder Traversal (DFS)
 void preorder(struct Node* root) {
     if (root != NULL) {
         printf("%d ", root->data);
@@ -46,7 +41,6 @@ void preorder(struct Node* root) {
     }
 }
 
-// Postorder Traversal (DFS)
 void postorder(struct Node* root) {
     if (root != NULL) {
         postorder(root->left);
@@ -55,7 +49,6 @@ void postorder(struct Node* root) {
     }
 }
 
-// BFS / Level Order Traversal
 void levelOrder(struct Node* root) {
     if (root == NULL)
         return;
@@ -76,7 +69,6 @@ void levelOrder(struct Node* root) {
     }
 }
 
-// Find maximum node and its parent
 void findMax(struct Node* root) {
     if (root == NULL) {
         printf("Tree is empty\n");
@@ -98,28 +90,25 @@ void findMax(struct Node* root) {
         printf("The node is root, no parent.\n");
 }
 
-// Count total nodes
 int countNodes(struct Node* root) {
     if (root == NULL)
         return 0;
     return 1 + countNodes(root->left) + countNodes(root->right);
 }
-
-// Find height of tree
+ 
 int height(struct Node* root) {
     if (root == NULL)
-        return -1;  // height in terms of edges
+        return -1;
     int lh = height(root->left);
     int rh = height(root->right);
     return (lh > rh ? lh : rh) + 1;
 }
 
-// Main Menu
 int main() {
     struct Node* root = NULL;
     int choice, data;
 
-    do {
+    for(;;) {
         printf("\n--- Binary Search Tree Menu ---\n");
         printf("1. Insert\n");
         printf("2. DFS Traversals\n");
@@ -173,7 +162,7 @@ int main() {
         default:
             printf("Invalid choice!\n");
         }
-    } while (choice != 7);
+    }
 
     return 0;
 }
