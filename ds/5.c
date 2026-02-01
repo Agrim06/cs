@@ -1,155 +1,165 @@
-#include<stdio.h>
-#include<stdlib.h>
+// Online C compiler to run C program online
+#include <stdio.h>
+#include <stdlib.h>
 
 struct Node{
-    struct Node* prev;
+    struct Node* next,*prev;
     int data;
-    struct Node* next;
 };
 
-struct CDLL{
+struct LL{
     struct Node* head;
     int size;
 };
 
 struct Node* createnode(int val){
-    struct Node* newnode = (struct Node*)malloc(sizeof(struct Node));
-    newnode->data = val;
-    newnode->prev = newnode->next = NULL;
-    return newnode;
+    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+    temp->data = val;
+    temp->next = NULL;
+    temp->prev = NULL;
+    return temp;
 }
 
-void initlist(struct CDLL* list){
+void initlist(struct LL* list){
     list->head = createnode(0);
     list->head->next = list->head;
     list->head->prev = list->head;
     list->size = 0;
 }
 
-void display(struct CDLL* list){
-    struct Node* temp = list->head->next;
-
-    if(temp == list->head){
-        printf("List Empty\n");
+void display(struct LL* list){
+    if(list->head->next == list->head) {
+        printf("EMPTY");
         return;
     }
-
+    struct Node* temp = list->head->next;
+    
     while(temp != list->head){
-        printf("%d <-> ", temp->data);
+        printf("%d<->",temp->data);
         temp = temp->next;
     }
     printf("HEAD\n");
 }
 
-void insertordered(struct CDLL* list, int val){
-    struct Node* temp = createnode(val);
-    struct Node* p = list->head->next;
-
-    while(p != list->head && p->data < val)
-        p = p->next;
-
-    temp->next = p;
-    temp->prev = p->prev;
-    p->prev->next = temp;
-    p->prev = temp;
-
+void insertbyorder(struct LL* list,int val){
+    struct Node* new = createnode(val);
+    struct Node* temp = list->head;
+    
+    while(temp->next != list->head && temp->next->data <val){
+        temp = temp->next;
+    }
+    new->next = temp->next;
+    new->prev = temp;
+    temp->next->prev = new;
+    temp->next = new;
+    
     list->size++;
     display(list);
 }
 
-void deletebypos(struct CDLL* list, int pos){
-    if(pos < 1 || pos > list->size){
-        printf("Invalid Position\n");
-        display(list);
-        return;
+void deletebypos(struct LL* list, int pos){
+    if(list->head->next == list->head) return;
+    if(pos < 1 || pos > list->size )return;
+    
+    struct Node* temp = list->head->next;
+    
+    int c = 1;
+    while(c < pos){
+       temp = temp->next; 
+       c++;
     }
-
-    struct Node* p = list->head->next;
-
-    for(int i = 1; i < pos; i++)
-        p = p->next;
-
-    p->prev->next = p->next;
-    p->next->prev = p->prev;
-    free(p);
+    
+    temp->prev->next = temp->next;
+    temp->next->prev = temp->prev;
+    printf("\nDeleted %d\n",temp->data);
+    free(temp);
     list->size--;
-
     display(list);
 }
 
-void deletebykey(struct CDLL* list, int key){
-    struct Node* p = list->head->next;
-
-    while(p != list->head && p->data != key)
-        p = p->next;
-
-    if(p == list->head){
-        printf("Key Not Found\n");
-        display(list);
-        return;
+void searchbypos(struct LL* list, int pos){
+    if(pos < 1 || pos > list->size )return;
+    
+    struct Node* temp = list->head->next;
+    int c =1;
+    
+    while(c<pos){
+        temp = temp->next;
+        c++;
     }
-
-    p->prev->next = p->next;
-    p->next->prev = p->prev;
-    free(p);
-    list->size--;
-
-    display(list);
+    
+    printf("\nFound %d at %d\n",temp->data,pos);
 }
 
-void searchbypos(struct CDLL* list, int pos){
-    if(pos < 1 || pos > list->size){
-        printf("Invalid Position\n");
-        display(list);
-        return;
-    }
+void deletebykey(struct LL* list, int key){
+     if(list->head->next == list->head) return;
+     
+     if(key == list->head->next->data) {
+         deletebypos(list,1);
+         return;
+     }
+     
+     struct Node* temp = list->head->next;
+     
+     while(temp != list->head && temp->data != key){
+         temp = temp->next;
+     }
+     
+     if(temp->data == key){
+        temp->prev->next = temp->next;
+        temp->next->prev = temp->prev;
+        printf("\nDeleted %d\n",temp->data);
+        free(temp);
+        list->size--;
+        display(list); 
+     }else{
+         printf("Key not found \n");
+         display(list); 
+     }
 
-    struct Node* p = list->head->next;
-
-    for(int i = 1; i < pos; i++)
-        p = p->next;
-
-    printf("Element at position %d is %d\n", pos, p->data);
-    display(list);
 }
 
-int main(){
-    struct CDLL list;
-    int ch, val, pos;
+int main() {
+    struct LL myList;
+    initlist(&myList);
+    int choice, val,pos;
+        printf("\n--- Double Linked List Menu ---");
+        printf("\n1. Insert (Ordered)\n2. Delete by pos\n3. Delete by Key\n4. Search by pos\n5. Display\n6. Exit");
+    while (1) {
 
-    initlist(&list);
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
 
-    while(1){
-        printf("\n1.Insert Ordered\n2.Delete by Position\n3.Delete by Key\n4.Search by Position\n5.Display\n6.Exit\n");
-        scanf("%d", &ch);
-
-        switch(ch){
+        switch (choice) {
             case 1:
+                printf("Enter value to insert: ");
                 scanf("%d", &val);
-                insertordered(&list, val);
+                insertbyorder(&myList, val);
                 break;
-
             case 2:
-                scanf("%d", &pos);
-                deletebypos(&list, pos);
+                printf("Enter the postion to delete: ");
+                scanf("%d",&pos);
+                deletebypos(&myList,pos);
                 break;
-
             case 3:
+                printf("Enter key to delete: ");
                 scanf("%d", &val);
-                deletebykey(&list, val);
+                deletebykey(&myList, val);
                 break;
-
             case 4:
+                printf("Enter position to search: ");
                 scanf("%d", &pos);
-                searchbypos(&list, pos);
+                searchbypos(&myList, pos);
                 break;
-
             case 5:
-                display(&list);
+                display(&myList);
                 break;
-
             case 6:
+                printf("Exiting...\n");
                 exit(0);
+            default:
+                printf("Invalid choice! Try again.\n");
         }
     }
+    return 0;
 }

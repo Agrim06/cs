@@ -2,195 +2,168 @@
 #include<stdlib.h>
 
 struct Node{
-    int data;
-    struct Node* next;
+	struct Node* next;
+	int data;
 };
 
-struct CSLL{
-    struct Node* head; 
-    int size;
+struct LL{
+	struct Node* head;
+	int size;
 };
 
 struct Node* createnode(int val){
-    struct Node* newnode = (struct Node*)malloc(sizeof(struct Node));
-    newnode->data = val;
-    newnode->next = NULL;
-    return newnode;
+	struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+	temp->data = val;
+	temp->next = NULL;
+	return temp;
 }
 
-void initlist(struct CSLL* list){
-    list->head = createnode(0);  
-    list->head->next = NULL;      
-    list->size = 0;
+void initlist(struct LL *list){
+	list->head = createnode(0);
+	list->head->next = NULL;
+	list->size = 0;
 }
 
-
-void display(struct CSLL* list){
-    if(list->head->next == NULL){
-        printf("List Empty\n");
-        return;
-    }
-
-    struct Node* temp = list->head->next;
-
-    do{
-        printf("%d -> ", temp->data);
-        temp = temp->next;
-    }while(temp != list->head->next);
-
-    printf("START\n");
+void display(struct LL* list){
+	if(list->head->next == NULL) return;
+	
+	struct Node* temp = list->head->next;
+	do{
+		printf("%d->",temp->data);
+		temp = temp->next;
+	}
+	while(temp != list->head->next);
+	printf("END\n");
 }
 
+void insertbyorder(struct LL* list ,int val){
+	struct Node* new = createnode(val);
 
-void insertordered(struct CSLL* list, int val){
-    struct Node* temp = createnode(val);
+	if(list->head->next == NULL){
+		new->next = new;
+		list->head->next = new;
+		list->size++;
+		return;
+	}
+	struct Node* curr = list->head->next;
+	struct Node* prev = NULL;
 
-    if(list->head->next == NULL){
-        list->head->next = temp;
-        temp->next = temp;
-    }
-    else{
-        struct Node* p = list->head->next;
-        struct Node* prev = NULL;
+	while(curr->next != list->head->next && curr->data < val){
+		prev = curr;
+		curr = curr->next;
+	}
 
-        do{
-            if(p->data >= val)
-                break;
-            prev = p;
-            p = p->next;
-        }while(p != list->head->next);
-
-        if(prev == NULL){
-     
-            struct Node* last = list->head->next;
-            while(last->next != list->head->next)
-                last = last->next;
-
-            temp->next = list->head->next;
-            list->head->next = temp;
-            last->next = temp;
-        }
-        else{
-            prev->next = temp;
-            temp->next = p;
-        }
-    }
-    list->size++;
-    display(list);
+	if(prev == NULL && val < curr->data){
+		struct Node* last = list->head->next;
+		while(last->next != list->head->next)
+			last = last->next;
+			
+		new->next = list->head->next;
+		last->next = new;
+		list->head->next = new;	
+	}else{
+		new->next = curr->next;
+		curr->next = new;
+	}
+	list->size++;
 }
 
+void deleterear(struct LL* list){
+	if(list->head->next == NULL) return;
 
-void deleterear(struct CSLL* list){
-    if(list->head->next == NULL){
-        printf("List Empty\n");
-        return;
-    }
+	if(list->head->next->next == list->head->next){
+		list->head->next =NULL;
+		list->size--;
+		return;
+	}
+	
+	struct Node* last = list->head->next;
+	struct Node* temp = NULL;
 
-    struct Node* first = list->head->next;
-
-    if(first->next == first){
-        free(first);
-        list->head->next = NULL;
-    }
-    else{
-        struct Node* prev = NULL;
-        struct Node* curr = first;
-
-        while(curr->next != first){
-            prev = curr;
-            curr = curr->next;
-        }
-        prev->next = first;
-        free(curr);
-    }
-    list->size--;
-    display(list);
+	while(last->next != list->head->next){
+		temp = last;
+		last = last->next;
+	}	
+	temp->next = last->next;
+	free(last);
+	list->size--;
 }
 
 
-void deletefront(struct CSLL* list){
-    if(list->head->next == NULL){
-        printf("List Empty\n");
-        return;
-    }
+void deletefront(struct LL *list){
+	if(list->head->next == NULL) return;	
 
-    struct Node* first = list->head->next;
+	struct Node* first = list->head->next;
+	if(first->next == first){
+		free(first);
+		list->head->next == NULL;
+		list->size--;
+		return;
+	}	
+	
+	struct Node* last = first;
+	
+	while(last->next != list->head->next){
+		last = last->next;
+	}
 
-    if(first->next == first){
-        free(first);
-        list->head->next = NULL;
-    }
-    else{
-        struct Node* last = first;
-        while(last->next != first)
-            last = last->next;
-
-        list->head->next = first->next;
-        last->next = list->head->next;
-        free(first);
-    }
-    list->size--;
-    display(list);
+	list->head->next = first->next;
+	last->next = first->next;
+	free(first);
+	list->size--;
 }
 
-
-void reverse(struct CSLL* list){
-    if(list->head->next == NULL || list->head->next->next == list->head->next){
-        display(list);
-        return;
-    }
-
-    struct Node *prev = NULL, *curr = list->head->next, *next;
-    struct Node* first = curr;
-
-    do{
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
-    }while(curr != list->head->next);
-
-    first->next = prev;
-    list->head->next = prev;
-
-    display(list);
+void reverse(struct LL* list){
+	if(list->head->next == NULL || list->head->next->next == list->head->next) return;
+	
+	struct Node* temp = list->head->next;
+	struct Node* prev = temp;
+	struct Node* first = temp;
+	struct Node* front;
+	while(temp->next != list->head->next){
+		front = temp->next;
+		temp->next = prev;
+		prev = temp;
+		temp = front;
+	}
+	temp->next = prev;
+	first->next = temp;
+	list->head->next = temp;
 }
-
 
 int main(){
-    struct CSLL list;
-    int ch, val;
+	struct LL clist;
+	initlist(&clist);
+	
+	for(;;){
+		printf("==============MENU===========\n");
+		printf("1.Insert By order\n2.Delete Rear\n3.Delete Front\n4.Reverse\n5.Exit\n");
+		printf("Enter your choice: ");
+		int choice ,val;
+		scanf("%d",&choice);
+		
+		switch(choice){
+			case 1: printf("\nEnter the value: ");
+					scanf("%d",&val);
+					insertbyorder(&clist, val);
+					display(&clist);
+					break;
+			
+			case 2: deleterear(&clist);
+					display(&clist);
+					break;
+	
+			case 3: deletefront(&clist);
+					display(&clist);
+					break;
 
-    initlist(&list);
-
-    while(1){
-        printf("\n1.Insert Ordered\n2.Delete Rear\n3.Delete Front\n4.Reverse\n5.Display\n6.Exit\n");
-        scanf("%d", &ch);
-
-        switch(ch){
-            case 1:
-                scanf("%d", &val);
-                insertordered(&list, val);
-                break;
-
-            case 2:
-                deleterear(&list);
-                break;
-
-            case 3:
-                deletefront(&list);
-                break;
-
-            case 4:
-                reverse(&list);
-                break;
-
-            case 5:
-                display(&list);
-                break;
-
-            case 6:
-                exit(0);
-        }
-    }
+			case 4: reverse(&clist);
+					display(&clist);
+					break;
+			
+			case 5: exit(0);break;
+			
+			default:printf("Invalid choice");break;
+		}
+	}
 }

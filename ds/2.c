@@ -29,7 +29,7 @@ void insertByPosition() {
         arr[i] = arr[i - 1];
 
     arr[pos] = value;
-    n++;
+n++;    
 }
 void deleteByKey() {
     int key, found = 0;
