@@ -1,39 +1,38 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 struct Node{
-    struct Node* prev;
+    struct Node *prev;
     int data;
-    struct Node* next;
+    struct Node *next;
 };
 
 struct CDLL{
-    struct Node* head;
+    struct Node *head;
     int size;
 };
 
-struct Node* createnode(int val){
-    struct Node* newnode = (struct Node*)malloc(sizeof(struct Node));
-    newnode->data = val;
-    newnode->prev = newnode->next = NULL;
-    return newnode;
+struct Node* createNode(int val){
+    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+    temp->data = val;
+    temp->prev = temp->next = NULL;
+    return temp;
 }
 
-void initlist(struct CDLL* list){
-    list->head = createnode(0);
+void initList(struct CDLL* list){
+    list->head = createNode(0);
     list->head->next = list->head;
     list->head->prev = list->head;
     list->size = 0;
 }
 
 void display(struct CDLL* list){
-    struct Node* temp = list->head->next;
-
-    if(temp == list->head){
-        printf("List Empty\n");
+    if(list->head->next == list->head){
+        printf("List is empty\n");
         return;
     }
 
+    struct Node* temp = list->head->next;
     while(temp != list->head){
         printf("%d <-> ", temp->data);
         temp = temp->next;
@@ -41,107 +40,114 @@ void display(struct CDLL* list){
     printf("HEAD\n");
 }
 
-void insertfront(struct CDLL* list, int val){
-    struct Node* temp = createnode(val);
+void insertFront(struct CDLL* list, int val){
+    struct Node* newnode = createNode(val);
 
-    temp->next = list->head->next;
-    temp->prev = list->head;
-    list->head->next->prev = temp;
-    list->head->next = temp;
+    newnode->next = list->head->next;
+    newnode->prev = list->head;
+    list->head->next->prev = newnode;
+    list->head->next = newnode;
 
     list->size++;
     display(list);
 }
 
-void insertatpos(struct CDLL* list, int val, int pos){
+void insertAtPos(struct CDLL* list, int val, int pos){
     if(pos < 1 || pos > list->size + 1){
-        printf("Invalid Position\n");
+        printf("Invalid position\n");
         display(list);
         return;
     }
 
-    struct Node* temp = createnode(val);
-    struct Node* p = list->head;
+    struct Node* newnode = createNode(val);
+    struct Node* temp = list->head;
 
     for(int i = 1; i < pos; i++)
-        p = p->next;
+        temp = temp->next;
 
-    temp->next = p->next;
-    temp->prev = p;
-    p->next->prev = temp;
-    p->next = temp;
+    newnode->next = temp->next;
+    newnode->prev = temp;
+    temp->next->prev = newnode;
+    temp->next = newnode;
 
     list->size++;
     display(list);
 }
 
-void deletebypos(struct CDLL* list, int pos){
+void deleteByPos(struct CDLL* list, int pos){
     if(pos < 1 || pos > list->size){
-        printf("Invalid Position\n");
+        printf("Invalid position\n");
         display(list);
         return;
     }
 
-    struct Node* p = list->head->next;
+    struct Node* temp = list->head->next;
 
     for(int i = 1; i < pos; i++)
-        p = p->next;
+        temp = temp->next;
 
-    p->prev->next = p->next;
-    p->next->prev = p->prev;
-    free(p);
+    temp->prev->next = temp->next;
+    temp->next->prev = temp->prev;
+
+    printf("Deleted element: %d\n", temp->data);
+    free(temp);
     list->size--;
 
     display(list);
 }
 
-void searchbykey(struct CDLL* list, int key){
-    struct Node* p = list->head->next;
+void searchByKey(struct CDLL* list, int key){
+    if(list->head->next == list->head){
+        printf("List is empty\n");
+        return;
+    }
+
+    struct Node* temp = list->head->next;
     int pos = 1;
 
-    while(p != list->head){
-        if(p->data == key){
-            printf("Key found at position %d\n", pos);
+    while(temp != list->head){
+        if(temp->data == key){
+            printf("Key %d found at position %d\n", key, pos);
             display(list);
             return;
         }
-        p = p->next;
+        temp = temp->next;
         pos++;
     }
 
-    printf("Key Not Found\n");
+    printf("Key not found\n");
     display(list);
 }
 
 int main(){
     struct CDLL list;
-    int ch, val, pos;
+    initList(&list);
 
-    initlist(&list);
+    int choice, val, pos;
 
     while(1){
         printf("\n1.Insert Front\n2.Insert at Position\n3.Delete by Position\n4.Search by Key\n5.Display\n6.Exit\n");
-        scanf("%d", &ch);
+        scanf("%d", &choice);
 
-        switch(ch){
+        switch(choice){
             case 1:
                 scanf("%d", &val);
-                insertfront(&list, val);
+                insertFront(&list, val);
                 break;
 
             case 2:
                 scanf("%d%d", &val, &pos);
-                insertatpos(&list, val, pos);
+                insertAtPos(&list, val, pos);
                 break;
 
             case 3:
                 scanf("%d", &pos);
-                deletebypos(&list, pos);
+                deleteByPos(&list, pos);
                 break;
 
             case 4:
                 scanf("%d", &val);
-                searchbykey(&list, val);
+                searchByKey(&list, val);
                 break;
 
             case 5:

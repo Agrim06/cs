@@ -1,105 +1,130 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-struct Deque{
-    int *arr;
+struct Queue{
+    int *queue;
     int front, rear, size;
 };
 
-void initdeque(struct Deque* dq, int n){
-    dq->size = n;
-    dq->front = -1;
-    dq->rear = 0;
-    dq->arr = (int*)malloc(n * sizeof(int));
+void init(struct Queue* q, int n){
+    q->size = n;
+    q->front = -1;
+    q->rear = -1;
+    q->queue = (int*)malloc(n * sizeof(int));
 }
 
-int isFull(struct Deque* dq){
-    return ((dq->front == 0 && dq->rear == dq->size-1) ||
-            (dq->front == dq->rear + 1));
+int isEmpty(struct Queue* q){
+    return q->front == -1;
 }
 
-int isEmpty(struct Deque* dq){
-    return (dq->front == -1);
+int isFull(struct Queue* q){
+    return ((q->front == 0 && q->rear == q->size - 1) ||
+            (q->front == q->rear + 1));
 }
 
-void insertfront(struct Deque* dq, int val){
-    if(isFull(dq)){
-        printf("Deque Overflow\n");
-        return;
-    }
-    if(isEmpty(dq))
-        dq->front = dq->rear = 0;
-    else if(dq->front == 0)
-        dq->front = dq->size - 1;
-    else
-        dq->front--;
-    dq->arr[dq->front] = val;
-}
-
-void insertrear(struct Deque* dq, int val){
-    if(isFull(dq)){
-        printf("Deque Overflow\n");
-        return;
-    }
-    if(isEmpty(dq))
-        dq->front = dq->rear = 0;
-    else if(dq->rear == dq->size - 1)
-        dq->rear = 0;
-    else
-        dq->rear++;
-    dq->arr[dq->rear] = val;
-}
-
-void deletefront(struct Deque* dq){
-    if(isEmpty(dq)){
-        printf("Deque Underflow\n");
-        return;
-    }
-    printf("Deleted: %d\n", dq->arr[dq->front]);
-    if(dq->front == dq->rear)
-        dq->front = dq->rear = -1;
-    else if(dq->front == dq->size - 1)
-        dq->front = 0;
-    else
-        dq->front++;
-}
-
-void deleterear(struct Deque* dq){
-    if(isEmpty(dq)){
-        printf("Deque Underflow\n");
-        return;
-    }
-    printf("Deleted: %d\n", dq->arr[dq->rear]);
-    if(dq->front == dq->rear)
-        dq->front = dq->rear = -1;
-    else if(dq->rear == 0)
-        dq->rear = dq->size - 1;
-    else
-        dq->rear--;
-}
-
-void display(struct Deque* dq){
-    if(isEmpty(dq)){
+void display(struct Queue* q){
+    if(isEmpty(q)){
         printf("Deque Empty\n");
         return;
     }
-    int i = dq->front;
-    while(1){
-        printf("%d ", dq->arr[i]);
-        if(i == dq->rear)
-            break;
-        i = (i + 1) % dq->size;
+
+    if(q->front <= q->rear){
+        for(int i = q->front; i <= q->rear; i++)
+            printf("%d ", q->queue[i]);
+    }else{
+        for(int i = q->front; i < q->size; i++)
+            printf("%d ", q->queue[i]);
+        for(int i = 0; i <= q->rear; i++)
+            printf("%d ", q->queue[i]);
     }
     printf("\n");
 }
 
+void insertfront(struct Queue* q, int val){
+    if(isFull(q)){
+        printf("Deque Full\n");
+        return;
+    }
+
+    if(isEmpty(q)){
+        q->front = q->rear = 0;
+    }
+    else if(q->front == 0){
+        q->front = q->size - 1;
+    }
+    else{
+        q->front--;
+    }
+
+    q->queue[q->front] = val;
+    display(q);
+}
+
+void insertrear(struct Queue* q, int val){
+    if(isFull(q)){
+        printf("Deque Full\n");
+        return;
+    }
+
+    if(isEmpty(q)){
+        q->front = q->rear = 0;
+    }
+    else if(q->rear == q->size - 1){
+        q->rear = 0;
+    }
+    else{
+        q->rear++;
+    }
+
+    q->queue[q->rear] = val;
+    display(q);
+}
+
+void deletefront(struct Queue* q){
+    if(isEmpty(q)){
+        printf("Deque Empty\n");
+        return;
+    }
+
+    if(q->front == q->rear){
+        q->front = q->rear = -1;
+    }
+    else if(q->front == q->size - 1){
+        q->front = 0;
+    }
+    else{
+        q->front++;
+    }
+
+    display(q);
+}
+
+void deleterear(struct Queue* q){
+    if(isEmpty(q)){
+        printf("Deque Empty\n");
+        return;
+    }
+
+    if(q->front == q->rear){
+        q->front = q->rear = -1;
+    }
+    else if(q->rear == 0){
+        q->rear = q->size - 1;
+    }
+    else{
+        q->rear--;
+    }
+
+    display(q);
+}
+
 int main(){
-    struct Deque dq;
+    struct Queue dq;
     int n, ch, val;
 
     printf("Enter deque size: ");
     scanf("%d", &n);
-    initdeque(&dq, n);
+    init(&dq, n);
 
     while(1){
         printf("\n1.Insert Front\n2.Insert Rear\n3.Delete Front\n4.Delete Rear\n5.Display\n6.Exit\n");
