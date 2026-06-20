@@ -1,147 +1,128 @@
-
 #include <stdio.h>
 
-typedef struct process
+typedef struct
 {
-    int processId;
-    int arrivalTime;
-    int burstTime;
-
-    int completionTime;
-    int turnAroundTime;
-    int waitingTime;
-    int finished;
-    int responseTime;
-
+    int Id, AT, BT, CT, TAT, WT, RT, isCompl;
 } Process;
 
-void sjfNP(Process[], int);
+void sjfNP(Process p[], int n);
 
 int main()
 {
     int n;
 
-    printf("Enter the number of processes: ");
+    printf("Enter number of processes: ");
     scanf("%d", &n);
 
-    Process processes[n];
+    Process p[n];
 
-    // Accept process details from the user
-    for (int i = 0; i < n; i++)
+    for(int i = 0; i < n; i++)
     {
-        printf("Process %d\n", i + 1);
+        p[i].Id = i + 1;
 
-        printf("Enter Arrival Time: ");
-        scanf("%d", &processes[i].arrivalTime);
+        printf("\nProcess %d\n", i + 1);
 
-        printf("Enter Burst Time: ");
-        scanf("%d", &processes[i].burstTime);
+        printf("AT: ");
+        scanf("%d", &p[i].AT);
 
-        processes[i].processId = i + 1;
-        processes[i].finished = 0;
+        printf("BT: ");
+        scanf("%d", &p[i].BT);
 
-        printf("\n");
+        p[i].isCompl = 0;
     }
 
-    sjfNP(processes, n);
+    sjfNP(p, n);
 
     return 0;
 }
 
-void sjfNP(Process processes[], int n)
+void sjfNP(Process p[], int n)
 {
-    float avgWaitingTime = 0;
-    float avgTurnAroundTime = 0;
-    float avgResponseTime = 0;
+    int curTime = 0;
+    int completed = 0;
 
-    int totalWaitingTime = 0;
-    int totalTurnAroundTime = 0;
-    int elapsedTime = 0;
-    int totalResponseTime = 0;
+    int totalWT = 0;
+    int totalTAT = 0;
+    int totalRT = 0;
 
-    int remainingProcesses = n;
+    printf("\nGantt Chart:\n");
 
-    int exec;
-
-    printf("\nGantt chart\n");
-
-    while (remainingProcesses)
+    while(completed != n)
     {
-        // Find shortest burst time process
-        exec = -1;
-        int shortestBurstTime = 9999;
+        int minIndex = -1;
+        int minBT = 9999;
 
-        for (int i = 0; i < n; i++)
+        for(int i = 0; i < n; i++)
         {
-            if (!processes[i].finished &&
-                processes[i].arrivalTime <= elapsedTime)
+            if(p[i].AT <= curTime &&
+               p[i].isCompl == 0)
             {
-                if (processes[i].burstTime < shortestBurstTime)
+                if(p[i].BT < minBT)
                 {
-                    exec = i;
-                    shortestBurstTime = processes[i].burstTime;
+                    minBT = p[i].BT;
+                    minIndex = i;
                 }
             }
         }
 
-        if (exec == -1)
+        if(minIndex == -1)
         {
-            printf("(%d) idle (%d)", elapsedTime, elapsedTime + 1);
-            elapsedTime++;
+            printf("(%d) Idle (%d) ",
+                   curTime,
+                   curTime + 1);
+
+            curTime++;
         }
         else
         {
-            int temp = elapsedTime;
+            int startTime = curTime;
 
-            processes[exec].responseTime =
-                elapsedTime - processes[exec].arrivalTime;
+            p[minIndex].RT =
+                startTime - p[minIndex].AT;
 
-            elapsedTime += processes[exec].burstTime;
+            curTime += p[minIndex].BT;
 
-            processes[exec].finished = 1;
+            p[minIndex].CT = curTime;
+            p[minIndex].TAT =
+                p[minIndex].CT - p[minIndex].AT;
 
-            processes[exec].completionTime = elapsedTime;
+            p[minIndex].WT =
+                p[minIndex].TAT - p[minIndex].BT;
 
-            remainingProcesses--;
+            p[minIndex].isCompl = 1;
+            completed++;
 
-            processes[exec].turnAroundTime =
-                processes[exec].completionTime -
-                processes[exec].arrivalTime;
-
-            processes[exec].waitingTime =
-                processes[exec].turnAroundTime -
-                processes[exec].burstTime;
-
-            printf("(%d) P%d (%d)",
-                   temp,
-                   processes[exec].processId,
-                   elapsedTime);
+            printf("(%d) P%d (%d) ",
+                   startTime,
+                   p[minIndex].Id,
+                   curTime);
         }
     }
 
-    printf("\nPID\tAT\tBT\tCT\tTAT\tWT\tRT\n");
+    printf("\n\nId\tAT\tBT\tCT\tTAT\tWT\tRT\n");
 
-    for (int i = 0; i < n; i++)
+    for(int i = 0; i < n; i++)
     {
         printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
-               processes[i].processId,
-               processes[i].arrivalTime,
-               processes[i].burstTime,
-               processes[i].completionTime,
-               processes[i].turnAroundTime,
-               processes[i].waitingTime,
-               processes[i].responseTime);
+               p[i].Id,
+               p[i].AT,
+               p[i].BT,
+               p[i].CT,
+               p[i].TAT,
+               p[i].WT,
+               p[i].RT);
 
-        totalTurnAroundTime += processes[i].turnAroundTime;
-        totalWaitingTime += processes[i].waitingTime;
-        totalResponseTime += processes[i].responseTime;
+        totalTAT += p[i].TAT;
+        totalWT += p[i].WT;
+        totalRT += p[i].RT;
     }
 
-    avgTurnAroundTime = (float)totalTurnAroundTime / n;
-    avgWaitingTime = (float)totalWaitingTime / n;
-    avgResponseTime = (float)totalResponseTime / n;
+    printf("\nAverage TAT = %.2f",
+           (float)totalTAT / n);
 
-    printf("\nAverage Waiting Time: %.2f\n", avgWaitingTime);
-    printf("Average Turnaround Time: %.2f\n", avgTurnAroundTime);
-    printf("Average Response Time: %.2f\n", avgResponseTime);
+    printf("\nAverage WT = %.2f",
+           (float)totalWT / n);
+
+    printf("\nAverage RT = %.2f\n",
+           (float)totalRT / n);
 }

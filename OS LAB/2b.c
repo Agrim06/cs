@@ -66,14 +66,10 @@ void main()
             if (p[minIndex].BT == 0)
             {
                 p[minIndex].CT = curTime;
-                p[minIndex].TAT =
-                    p[minIndex].CT - p[minIndex].AT;
-                p[minIndex].WT =
-                    p[minIndex].TAT - tempBT[minIndex];
-
+                p[minIndex].TAT = p[minIndex].CT - p[minIndex].AT;
+                p[minIndex].WT = p[minIndex].TAT - tempBT[minIndex];
                 total_TAT += p[minIndex].TAT;
                 total_WT += p[minIndex].WT;
-
                 completed++;
             }
         }

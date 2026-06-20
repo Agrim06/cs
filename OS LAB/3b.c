@@ -1,151 +1,104 @@
 #include <stdio.h>
 
-typedef struct node
+typedef struct
 {
-    int processId;
-    int arrivalTime;
-    int burstTime;
-    int completionTime;
-    int turnAroundTime;
-    int waitingTime;
-    int responseTime;
+    int Id, AT, BT, CT, TAT, WT, RT;
 } Process;
 
-void fcfs(Process[], int);
+void fcfs(Process p[], int n);
 
 int main()
 {
     int n;
 
-    printf("Enter the number of processes: ");
+    printf("Enter number of processes: ");
     scanf("%d", &n);
 
-    Process processes[n];
+    Process p[n];
 
-    // Accept process details
-    for (int i = 0; i < n; i++)
+    for(int i = 0; i < n; i++)
     {
-        printf("Process %d\n", i + 1);
+        p[i].Id = i + 1;
 
-        printf("Enter Arrival Time: ");
-        scanf("%d", &processes[i].arrivalTime);
+        printf("\nProcess %d\n", i + 1);
 
-        printf("Enter Burst Time: ");
-        scanf("%d", &processes[i].burstTime);
+        printf("AT: ");
+        scanf("%d", &p[i].AT);
 
-        processes[i].processId = i + 1;
-
-        printf("\n");
+        printf("BT: ");
+        scanf("%d", &p[i].BT);
     }
 
-    // Sort processes by arrival time
-    for (int i = 0; i < n - 1; i++)
+    for(int i = 0; i < n - 1; i++)
     {
-        for (int j = 0; j < n - i - 1; j++)
+        for(int j = 0; j < n - i - 1; j++)
         {
-            if (processes[j].arrivalTime >
-                processes[j + 1].arrivalTime)
+            if(p[j].AT > p[j + 1].AT)
             {
-                Process temp = processes[j];
-                processes[j] = processes[j + 1];
-                processes[j + 1] = temp;
+                Process temp = p[j];
+                p[j] = p[j + 1];
+                p[j + 1] = temp;
             }
         }
     }
 
-    fcfs(processes, n);
+    fcfs(p, n);
 
     return 0;
 }
 
-
-void fcfs(Process processes[], int n)
+void fcfs(Process p[], int n)
 {
-    int elapsedTime = 0;
+    int curTime = 0;
+    int totalWT = 0, totalTAT = 0, totalRT = 0;
 
-    float avgWaitingTime = 0;
-    float avgTurnAroundTime = 0;
-    float avgResponseTime = 0;
+    printf("\nGantt Chart:\n");
 
-    int totalWaitingTime = 0;
-    int totalTurnAroundTime = 0;
-    int totalResponseTime = 0;
-
-    printf("\nGantt chart\n");
-
-    for (int i = 0; i < n; i++)
+    for(int i = 0; i < n; i++)
     {
-        // Handle idle CPU time
-        if (processes[i].arrivalTime > elapsedTime)
-        {
-            elapsedTime +=
-                (processes[i].arrivalTime - elapsedTime);
-        }
+        if(curTime < p[i].AT)
+            curTime = p[i].AT;
 
-        int temp = elapsedTime;
+        int startTime = curTime;
 
-        processes[i].responseTime =
-            elapsedTime - processes[i].arrivalTime;
+        p[i].RT = startTime - p[i].AT;
 
-        elapsedTime += processes[i].burstTime;
+        curTime += p[i].BT;
 
-        processes[i].completionTime = elapsedTime;
+        p[i].CT = curTime;
+        p[i].TAT = p[i].CT - p[i].AT;
+        p[i].WT = p[i].TAT - p[i].BT;
 
-        processes[i].turnAroundTime =
-            processes[i].completionTime -
-            processes[i].arrivalTime;
+        printf("(%d) P%d (%d) ",
+               startTime,
+               p[i].Id,
+               curTime);
 
-        processes[i].waitingTime =
-            processes[i].turnAroundTime -
-            processes[i].burstTime;
-
-        printf("(%d) P%d (%d)",
-               temp,
-               processes[i].processId,
-               elapsedTime);
+        totalTAT += p[i].TAT;
+        totalWT += p[i].WT;
+        totalRT += p[i].RT;
     }
 
-    printf("\n");
+    printf("\n\nId\tAT\tBT\tCT\tTAT\tWT\tRT\n");
 
-    printf("\nObservation Table\n");
-    printf("PID\tAT\tBT\tCT\tTT\tWT\tRT\n");
-
-    for (int i = 0; i < n; i++)
+    for(int i = 0; i < n; i++)
     {
         printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
-               processes[i].processId,
-               processes[i].arrivalTime,
-               processes[i].burstTime,
-               processes[i].completionTime,
-               processes[i].turnAroundTime,
-               processes[i].waitingTime,
-               processes[i].responseTime);
-
-        totalTurnAroundTime +=
-            processes[i].turnAroundTime;
-
-        totalWaitingTime +=
-            processes[i].waitingTime;
-
-        totalResponseTime +=
-            processes[i].responseTime;
+               p[i].Id,
+               p[i].AT,
+               p[i].BT,
+               p[i].CT,
+               p[i].TAT,
+               p[i].WT,
+               p[i].RT);
     }
 
-    avgTurnAroundTime =
-        (float)totalTurnAroundTime / n;
+    printf("\nAverage TAT = %.2f",
+           (float)totalTAT / n);
 
-    avgWaitingTime =
-        (float)totalWaitingTime / n;
+    printf("\nAverage WT = %.2f",
+           (float)totalWT / n);
 
-    avgResponseTime =
-        (float)totalResponseTime / n;
-
-    printf("\nAverage Waiting Time: %.2f\n",
-           avgWaitingTime);
-
-    printf("Average Turnaround Time: %.2f\n",
-           avgTurnAroundTime);
-
-    printf("Average Response Time: %.2f\n",
-           avgResponseTime);
+    printf("\nAverage RT = %.2f\n",
+           (float)totalRT / n);
 }
