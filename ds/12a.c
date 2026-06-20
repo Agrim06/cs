@@ -1,0 +1,72 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct Queue{
+    int *arr;
+    int front, rear, size;
+};
+
+void initqueue(struct Queue* q, int n){
+    q->size = n;
+    q->front = q->rear = -1;
+    q->arr = (int*)malloc(n * sizeof(int));
+}
+
+int isEmpty(struct Queue* q){
+    return (q->front == -1);
+}
+
+int isFull(struct Queue* q){
+    return (q->rear == q->size - 1);
+}
+
+void enqueue(struct Queue* q, int val){
+    if(isFull(q)){
+        printf("Queue Overflow\n");
+        return;
+    }
+    if(isEmpty(q))
+        q->front = 0;
+    q->arr[++q->rear] = val;
+}
+
+void dequeue(struct Queue* q){
+    if(isEmpty(q)){
+        printf("Queue Underflow\n");
+        return;
+    }
+    printf("Deleted: %d\n", q->arr[q->front++]);
+    if(q->front > q->rear)
+        q->front = q->rear = -1;
+}
+
+void display(struct Queue* q){
+    if(isEmpty(q)){
+        printf("Queue Empty\n");
+        return;
+    }
+    for(int i = q->front; i <= q->rear; i++)
+        printf("%d ", q->arr[i]);
+    printf("\n");
+}
+
+int main(){
+    struct Queue q;
+    int n, ch, val;
+
+    printf("Enter queue size: ");
+    scanf("%d", &n);
+    initqueue(&q, n);
+
+    while(1){
+        printf("\n1.Enqueue\n2.Dequeue\n3.Display\n4.Exit\n");
+        scanf("%d", &ch);
+
+        switch(ch){
+            case 1: scanf("%d", &val); enqueue(&q, val); break;
+            case 2: dequeue(&q); break;
+            case 3: display(&q); break;
+            case 4: exit(0);
+        }
+    }
+}
