@@ -4,36 +4,27 @@
 
 int main()
 {
-    int n, i;
+    int i, n;
     int *ptr;
 
     int shmid = shmget(1234, 1024, 0666);
 
     ptr = (int *)shmat(shmid, NULL, 0);
 
-    printf("Enter n: ");
-    scanf("%d", &n);
+    n = ptr[0];
 
-    ptr[0] = n;
+    printf("Parent: Fibonacci Series Read from Shared Memory\n");
 
-    int a = 0, b = 1, c;
-
-    ptr[1] = a;
-
-    if(n > 1)
-        ptr[2] = b;
-
-    for(i = 2; i < n; i++)
+    for(i = 1; i <= n; i++)
     {
-        c = a + b;
-        ptr[i + 1] = c;
-        a = b;
-        b = c;
+        printf("%d ", ptr[i]);
     }
 
-    printf("Child: Fibonacci Series Written to Shared Memory\n");
+    printf("\n");
 
     shmdt(ptr);
+
+    shmctl(shmid, IPC_RMID, NULL);
 
     return 0;
 }

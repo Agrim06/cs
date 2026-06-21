@@ -7,7 +7,7 @@ int main()
     int n, i;
     int *ptr;
 
-    int shmid = shmget(1234, 1024, 0666);
+    int shmid = shmget(1234, 1024, IPC_CREAT | 0666);
 
     ptr = (int *)shmat(shmid, NULL, 0);
 

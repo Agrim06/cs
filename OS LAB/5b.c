@@ -13,6 +13,8 @@ int main()
     scanf("%d", &n);
 
     Process p[n];
+    int remainingBT[n];
+    int isFirstResponse[n];
 
     for(int i = 0; i < n; i++)
     {
@@ -26,7 +28,9 @@ int main()
         printf("BT: ");
         scanf("%d", &p[i].BT);
 
+        remainingBT[i] = p[i].BT;
         p[i].isCompl = 0;
+        isFirstResponse[i] = 1;
     }
 
     int curTime = 0;
@@ -37,6 +41,8 @@ int main()
     int totalRT = 0;
 
     printf("\nGantt Chart:\n");
+    
+    int prevProcess = -1;
 
     while(completed != n)
     {
@@ -45,45 +51,62 @@ int main()
 
         for(int i = 0; i < n; i++)
         {
-            if(p[i].AT <= curTime &&
-               p[i].isCompl == 0)
+            if(p[i].AT <= curTime && p[i].isCompl == 0)
             {
-                if(p[i].BT < minBT)
+                if(remainingBT[i] < minBT)
                 {
-                    minBT = p[i].BT;
+                    minBT = remainingBT[i];
                     minIndex = i;
+                }
+                else if(remainingBT[i] == minBT)
+                {
+                    if(p[i].AT < p[minIndex].AT)
+                    {
+                        minIndex = i;
+                    }
                 }
             }
         }
 
         if(minIndex == -1)
         {
-            printf("(%d) Idle (%d) ",
-                   curTime,
-                   curTime + 1);
-
+            if(prevProcess != -2)
+            {
+                printf("(%d) Idle ", curTime);
+            }
+            prevProcess = -2;
             curTime++;
         }
         else
         {
-            int startTime = curTime;
+            if(isFirstResponse[minIndex] == 1)
+            {
+                p[minIndex].RT = curTime - p[minIndex].AT;
+                isFirstResponse[minIndex] = 0;
+            }
 
-            p[minIndex].RT = startTime - p[minIndex].AT;
-            curTime += p[minIndex].BT;
-            p[minIndex].CT = curTime;
-            p[minIndex].TAT = p[minIndex].CT - p[minIndex].AT;
-            p[minIndex].WT = p[minIndex].TAT - p[minIndex].BT;
-            p[minIndex].isCompl = 1;
-            completed++;
+            if(prevProcess != minIndex)
+            {
+                printf("(%d) P%d ", curTime, p[minIndex].Id);
+                prevProcess = minIndex;
+            }
 
-            printf("(%d) P%d (%d) ",
-                   startTime,
-                   p[minIndex].Id,
-                   curTime);
+            remainingBT[minIndex]--;
+            curTime++;
+
+            if(remainingBT[minIndex] == 0)
+            {
+                p[minIndex].CT = curTime;
+                p[minIndex].TAT = p[minIndex].CT - p[minIndex].AT;
+                p[minIndex].WT = p[minIndex].TAT - p[minIndex].BT;
+                p[minIndex].isCompl = 1;
+                completed++;
+            }
         }
     }
+    printf("(%d)\n", curTime);
 
-    printf("\n\nId\tAT\tBT\tCT\tTAT\tWT\tRT\n");
+    printf("\nId\tAT\tBT\tCT\tTAT\tWT\tRT\n");
 
     for(int i = 0; i < n; i++)
     {
@@ -101,14 +124,9 @@ int main()
         totalRT += p[i].RT;
     }
 
-    printf("\nAverage TAT = %.2f",
-           (float)totalTAT / n);
-
-    printf("\nAverage WT = %.2f",
-           (float)totalWT / n);
-
-    printf("\nAverage RT = %.2f\n",
-           (float)totalRT / n);
+    printf("\nAverage TAT = %.2f", (float)totalTAT / n);
+    printf("\nAverage WT = %.2f", (float)totalWT / n);
+    printf("\nAverage RT = %.2f\n", (float)totalRT / n);
 
     return 0;
 }
