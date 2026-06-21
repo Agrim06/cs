@@ -2,11 +2,10 @@
 
 typedef struct
 {
-    int Id, AT, BT, remBT;
-    int CT, TAT, WT, RT;
+    int Id, AT, BT, CT, TAT, WT, RT, remBT;
 } Process;
 
-void sjfPreemptive(Process p[], int n);
+void sjfP(Process p[], int n);
 
 int main()
 {
@@ -32,12 +31,12 @@ int main()
         p[i].remBT = p[i].BT;
     }
 
-    sjfPreemptive(p, n);
+    sjfP(p, n);
 
     return 0;
 }
 
-void sjfPreemptive(Process p[], int n)
+void sjfP(Process p[], int n)
 {
     int timeTrack[100];
     int processTrack[100];

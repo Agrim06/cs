@@ -19,7 +19,6 @@ int main()
 
     if (child_pid == 0)
     {
-        // Child process
         printf("[CHILD] This is the child process.\n");
 
         my_pid = getpid();
@@ -33,7 +32,7 @@ int main()
     }
     else
     {
-        // Parent process
+       
         printf("[PARENT] This is the parent process.\n");
 
         my_pid = getpid();

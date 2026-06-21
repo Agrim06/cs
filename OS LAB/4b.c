@@ -77,18 +77,15 @@ void sjfNP(Process p[], int n)
         {
             int startTime = curTime;
 
-            p[minIndex].RT =
-                startTime - p[minIndex].AT;
-
+            p[minIndex].RT = startTime - p[minIndex].AT;
+            
             curTime += p[minIndex].BT;
-
+            
             p[minIndex].CT = curTime;
-            p[minIndex].TAT =
-                p[minIndex].CT - p[minIndex].AT;
+            p[minIndex].TAT =p[minIndex].CT - p[minIndex].AT;
 
-            p[minIndex].WT =
-                p[minIndex].TAT - p[minIndex].BT;
-
+            p[minIndex].WT = p[minIndex].TAT - p[minIndex].BT;
+            
             p[minIndex].isCompl = 1;
             completed++;
 
