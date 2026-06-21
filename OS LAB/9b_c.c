@@ -1,51 +1,39 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <sys/ipc.h>
 #include <sys/shm.h>
 
-int main(int argc, char *argv[])
+int main()
 {
-    int shmid;
-    void *ptr;
+    int n, i;
+    int *ptr;
 
-    shmid = shmget((key_t)1122, 4096, 0666);
+    int shmid = shmget(1234, 1024, 0666);
 
-    ptr = shmat(shmid, NULL, 0);
+    ptr = (int *)shmat(shmid, NULL, 0);
 
-    int n = atoi(argv[1]);
+    printf("Enter n: ");
+    scanf("%d", &n);
 
-    int n1 = 0;
-    int n2 = 1;
-    int n3;
-    int k = 2;
+    ptr[0] = n;
 
-    printf("CHILD:\n");
+    int a = 0, b = 1, c;
 
-    sprintf((char *)ptr, "%d %d ", n1, n2);
+    ptr[1] = a;
 
-    ptr += strlen((char *)ptr);
+    if(n > 1)
+        ptr[2] = b;
 
-    printf("%d %d ", n1, n2);
-
-    while (k < n)
+    for(i = 2; i < n; i++)
     {
-        n3 = n1 + n2;
-
-        sprintf((char *)ptr, "%d ", n3);
-
-        printf("%d ", n3);
-
-        ptr += strlen((char *)ptr);
-
-        n1 = n2;
-        n2 = n3;
-
-        k++;
+        c = a + b;
+        ptr[i + 1] = c;
+        a = b;
+        b = c;
     }
 
-    printf("\n");
+    printf("Child: Fibonacci Series Written to Shared Memory\n");
 
-    shmctl(shmid, IPC_RMID, NULL);
+    shmdt(ptr);
 
     return 0;
 }

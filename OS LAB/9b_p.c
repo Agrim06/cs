@@ -1,49 +1,39 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include <sys/ipc.h>
 #include <sys/shm.h>
 
-int main(int argc, char *argv[])
+int main()
 {
-    int shmid;
-    void *ptr;
-    pid_t pid;
+    int n, i;
+    int *ptr;
 
-    if (argc != 2)
+    int shmid = shmget(1234, 1024, 0666);
+
+    ptr = (int *)shmat(shmid, NULL, 0);
+
+    printf("Enter n: ");
+    scanf("%d", &n);
+
+    ptr[0] = n;
+
+    int a = 0, b = 1, c;
+
+    ptr[1] = a;
+
+    if(n > 1)
+        ptr[2] = b;
+
+    for(i = 2; i < n; i++)
     {
-        printf("Usage: %s <n>\n", argv[0]);
-        return 1;
+        c = a + b;
+        ptr[i + 1] = c;
+        a = b;
+        b = c;
     }
 
-    shmid = shmget((key_t)1122, 4096, 0666 | IPC_CREAT);
+    printf("Child: Fibonacci Series Written to Shared Memory\n");
 
-    if (shmid == -1)
-    {
-        printf("Shared memory creation failed\n");
-        return 1;
-    }
-
-    ptr = shmat(shmid, NULL, 0);
-
-    pid = fork();
-
-    if (pid == 0)
-    {
-        execlp("./fib", "fib", argv[1], NULL);
-    }
-    else if (pid > 0)
-    {
-        wait(NULL);
-
-        printf("\nPARENT: Child completed\n");
-        printf("Fibonacci Series:\n");
-
-        printf("%s\n", (char *)ptr);
-
-        shmdt(ptr);
-    }
+    shmdt(ptr);
 
     return 0;
 }
