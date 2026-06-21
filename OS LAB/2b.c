@@ -60,9 +60,7 @@ void main()
         {
             p[minIndex].BT--;
 
-            printf("| P%d(1) %d",
-                   p[minIndex].Id,
-                   curTime);
+            printf("| P%d(1) %d",p[minIndex].Id,curTime);
             if (p[minIndex].BT == 0)
             {
                 p[minIndex].CT = curTime;

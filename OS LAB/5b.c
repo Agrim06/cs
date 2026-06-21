@@ -2,10 +2,8 @@
 
 typedef struct
 {
-    int Id, AT, BT, CT, TAT, WT, RT, remBT;
+    int Id, AT, BT, CT, TAT, WT, RT, isCompl;
 } Process;
-
-void sjfP(Process p[], int n);
 
 int main()
 {
@@ -28,31 +26,19 @@ int main()
         printf("BT: ");
         scanf("%d", &p[i].BT);
 
-        p[i].remBT = p[i].BT;
+        p[i].isCompl = 0;
     }
 
-    sjfP(p, n);
-
-    return 0;
-}
-
-void sjfP(Process p[], int n)
-{
-    int timeTrack[100];
-    int processTrack[100];
-
-    int j = -1, k = -1;
-
     int curTime = 0;
-    int completed = n;
+    int completed = 0;
 
     int totalWT = 0;
     int totalTAT = 0;
     int totalRT = 0;
 
-    timeTrack[++j] = 0;
+    printf("\nGantt Chart:\n");
 
-    while(completed)
+    while(completed != n)
     {
         int minIndex = -1;
         int minBT = 9999;
@@ -60,11 +46,11 @@ void sjfP(Process p[], int n)
         for(int i = 0; i < n; i++)
         {
             if(p[i].AT <= curTime &&
-               p[i].remBT > 0)
+               p[i].isCompl == 0)
             {
-                if(p[i].remBT < minBT)
+                if(p[i].BT < minBT)
                 {
-                    minBT = p[i].remBT;
+                    minBT = p[i].BT;
                     minIndex = i;
                 }
             }
@@ -72,49 +58,32 @@ void sjfP(Process p[], int n)
 
         if(minIndex == -1)
         {
-            processTrack[++k] = 0;
+            printf("(%d) Idle (%d) ",
+                   curTime,
+                   curTime + 1);
 
             curTime++;
-
-            timeTrack[++j] = curTime;
-
-            continue;
         }
-
-        if(p[minIndex].remBT == p[minIndex].BT)
+        else
         {
-            p[minIndex].RT =
-                curTime - p[minIndex].AT;
-        }
+            int startTime = curTime;
 
-        p[minIndex].remBT--;
-
-        curTime++;
-
-        processTrack[++k] = p[minIndex].Id;
-
-        timeTrack[++j] = curTime;
-
-        if(p[minIndex].remBT == 0)
-        {
+            p[minIndex].RT = startTime - p[minIndex].AT;
+            curTime += p[minIndex].BT;
             p[minIndex].CT = curTime;
+            p[minIndex].TAT = p[minIndex].CT - p[minIndex].AT;
+            p[minIndex].WT = p[minIndex].TAT - p[minIndex].BT;
+            p[minIndex].isCompl = 1;
+            completed++;
 
-            p[minIndex].TAT =
-                p[minIndex].CT - p[minIndex].AT;
-
-            p[minIndex].WT =
-                p[minIndex].TAT - p[minIndex].BT;
-
-            totalTAT += p[minIndex].TAT;
-            totalWT += p[minIndex].WT;
-            totalRT += p[minIndex].RT;
-
-            completed--;
+            printf("(%d) P%d (%d) ",
+                   startTime,
+                   p[minIndex].Id,
+                   curTime);
         }
     }
 
-    printf("\nObservation Table\n");
-    printf("Id\tAT\tBT\tCT\tTAT\tWT\tRT\n");
+    printf("\n\nId\tAT\tBT\tCT\tTAT\tWT\tRT\n");
 
     for(int i = 0; i < n; i++)
     {
@@ -126,19 +95,11 @@ void sjfP(Process p[], int n)
                p[i].TAT,
                p[i].WT,
                p[i].RT);
+
+        totalTAT += p[i].TAT;
+        totalWT += p[i].WT;
+        totalRT += p[i].RT;
     }
-
-    printf("\nGantt Chart\n");
-
-    for(int i = 0; i <= k; i++)
-        printf("| P%d ", processTrack[i]);
-
-    printf("|\n");
-
-    for(int i = 0; i <= j; i++)
-        printf("%d\t", timeTrack[i]);
-
-    printf("\n");
 
     printf("\nAverage TAT = %.2f",
            (float)totalTAT / n);
@@ -148,4 +109,6 @@ void sjfP(Process p[], int n)
 
     printf("\nAverage RT = %.2f\n",
            (float)totalRT / n);
+
+    return 0;
 }

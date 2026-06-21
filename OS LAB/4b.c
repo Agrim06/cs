@@ -5,8 +5,6 @@ typedef struct
     int Id, AT, BT, CT, TAT, WT, RT, isCompl;
 } Process;
 
-void sjfNP(Process p[], int n);
-
 int main()
 {
     int n;
@@ -31,13 +29,6 @@ int main()
         p[i].isCompl = 0;
     }
 
-    sjfNP(p, n);
-
-    return 0;
-}
-
-void sjfNP(Process p[], int n)
-{
     int curTime = 0;
     int completed = 0;
 
@@ -77,15 +68,19 @@ void sjfNP(Process p[], int n)
         {
             int startTime = curTime;
 
-            p[minIndex].RT = startTime - p[minIndex].AT;
-            
-            curTime += p[minIndex].BT;
-            
-            p[minIndex].CT = curTime;
-            p[minIndex].TAT =p[minIndex].CT - p[minIndex].AT;
+            p[minIndex].RT =
+                startTime - p[minIndex].AT;
 
-            p[minIndex].WT = p[minIndex].TAT - p[minIndex].BT;
-            
+            curTime += p[minIndex].BT;
+
+            p[minIndex].CT = curTime;
+
+            p[minIndex].TAT =
+                p[minIndex].CT - p[minIndex].AT;
+
+            p[minIndex].WT =
+                p[minIndex].TAT - p[minIndex].BT;
+
             p[minIndex].isCompl = 1;
             completed++;
 
@@ -122,4 +117,6 @@ void sjfNP(Process p[], int n)
 
     printf("\nAverage RT = %.2f\n",
            (float)totalRT / n);
+
+    return 0;
 }

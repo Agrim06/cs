@@ -47,7 +47,6 @@ void main() {
 
     sort(n);
 
-    // A queue is required for demonstrating this algorithm
     int completed = 0, curIndex, curTime = p[0].AT;
     int *waitQueue, front = 0, rear = 0;
 
@@ -100,7 +99,6 @@ void main() {
     avg_TAT = (float)total_TAT / n;
     avg_WT = (float)total_WT / n;
 
-    // Printing the table of processes with details
     printf("\nPID\tAT\tBT\tCT\tTAT\tWT\n");
 
     for (int i = 0; i < n; i++) {

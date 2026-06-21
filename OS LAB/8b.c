@@ -38,4 +38,4 @@ int main(int argc, char *argv[]){
         pthread_join(thread2, NULL);
         printf("Inside the main thread\n");
         return 0;
-}
+}       

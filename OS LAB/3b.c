@@ -5,8 +5,6 @@ typedef struct
     int Id, AT, BT, CT, TAT, WT, RT;
 } Process;
 
-void fcfs(Process p[], int n);
-
 int main()
 {
     int n;
@@ -42,13 +40,6 @@ int main()
         }
     }
 
-    fcfs(p, n);
-
-    return 0;
-}
-
-void fcfs(Process p[], int n)
-{
     int curTime = 0;
     int totalWT = 0, totalTAT = 0, totalRT = 0;
 
@@ -101,4 +92,6 @@ void fcfs(Process p[], int n)
 
     printf("\nAverage RT = %.2f\n",
            (float)totalRT / n);
+
+    return 0;
 }

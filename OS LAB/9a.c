@@ -5,35 +5,33 @@
 
 int main()
 {
-    int fd1, fd2;
+    int f1, f2;
     char buffer[100];
     int n;
 
-    fd1 = open("input.txt", O_RDONLY);
+    f1 = open("input.txt", O_RDONLY);
 
-    if(fd1 == -1)
+    if(f1 == -1)
     {
         printf("Cannot open input file\n");
         exit(1);
     }
 
-    fd2 = open("output.txt",
-               O_WRONLY | O_CREAT | O_TRUNC,
-               0644);
+    f2 = open("output.txt",O_WRONLY | O_CREAT | O_TRUNC,0644);
 
-    if(fd2 == -1)
+    if(f2 == -1)
     {
         printf("Cannot create output file\n");
         exit(1);
     }
 
-    while((n = read(fd1, buffer, sizeof(buffer))) > 0)
+    while((n = read(f1, buffer, sizeof(buffer))) > 0)
     {
-        write(fd2, buffer, n);
+        write(f2, buffer, n);
     }
 
-    close(fd1);
-    close(fd2);
+    close(f1);
+    close(f2);
 
     printf("File copied successfully\n");
 
