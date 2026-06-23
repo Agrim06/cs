@@ -14,6 +14,7 @@ int floyds(int adjMat[n][n], int n)
                 dist[i][j] = INT_MAX;
             else
                 dist[i][j] = adjMat[i][j];
+                
     for (int k = 0; k < n; k++)
         for (int i = 0; i < n; i++)
         {

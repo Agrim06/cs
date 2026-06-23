@@ -23,7 +23,7 @@ void plotter()
 {
     srand(time(NULL));
     int *arr;
-    int n, key, r;
+    int n, key;
     FILE *f1, *f2, *f3;
     f1 = fopen("linearbest.txt", "w");
     f2 = fopen("linearavg.txt", "w");
@@ -34,16 +34,16 @@ void plotter()
         arr = (int *)malloc(n * sizeof(int));
         for (int i = 0; i < n; i++)
             *(arr + i) = 1;
-        r = linearSearch(arr, n, 1);
+        linearSearch(arr, n, 1);
         fprintf(f1, "%d\t%d\n", n, count);
         for (int i = 0; i < n; i++)
             *(arr + i) = rand() % n;
         key = rand() % n;
-        r = linearSearch(arr, n, key);
+        linearSearch(arr, n, key);
         fprintf(f2, "%d\t%d\n", n, count);
         for (int i = 0; i < n; i++)
             *(arr + i) = 0;
-        r = linearSearch(arr, n, 1);
+        linearSearch(arr, n, 1);
         fprintf(f3, "%d\t%d\n", n, count);
         n = n * 2;
         free(arr);

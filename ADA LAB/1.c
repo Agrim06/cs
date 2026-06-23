@@ -45,6 +45,7 @@ int modifiedEuclids(int m, int n)
 
     while (++count && m != n)
     {
+        
         if (m > n)
             m -= n;
         else

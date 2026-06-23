@@ -1,33 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int n, indeg[20], count = 0, queue[20], front = -1, rear = -1;
+int n;
+int indeg[20];
+int queue[20];
+int front, rear;
+int count;
 
 int bfs(int mat[n][n])
 {
     int count = 0;
+
     front = rear = -1;
 
-    for (int i = 0; i < n; i++)
+    for(int i = 0; i < n; i++)
     {
-        if (indeg[i] == 0)
-        {
+        if(indeg[i] == 0)
             queue[++rear] = i;
-        }
     }
 
-    while (front != rear)
+    while(front != rear)
     {
         int curr = queue[++front];
+
         count++;
 
-        for (int i = 0; i < n; i++)
+        for(int i = 0; i < n; i++)
         {
             count++;
-            if (mat[curr][i])
+
+            if(mat[curr][i])
             {
                 indeg[i]--;
-                if (!indeg[i])
+
+                if(indeg[i] == 0)
                     queue[++rear] = i;
             }
         }
@@ -38,23 +44,48 @@ int bfs(int mat[n][n])
 
 void plotter()
 {
-    FILE *f1 = fopen("srcrmMatTopSort.txt", "w");
+    FILE *fb, *fw;
 
-    for (int k = 1; k <= 10; k++)
+    fb = fopen("SrcRemBest.txt", "w");
+    fw = fopen("SrcRemWorst.txt", "w");
+
+    for(int k = 1; k <= 20; k++)
     {
         n = k;
+
         int adjMat[n][n];
 
-        for (int i = 0; i < n; i++)
+        /* Best Case */
+
+        for(int i = 0; i < n; i++)
             indeg[i] = 0;
 
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                adjMat[i][j] = 0;
-
-        for (int i = 0; i < n; i++)
+        for(int i = 0; i < n; i++)
         {
-            for (int j = i + 1; j < n; j++)
+            for(int j = 0; j < n; j++)
+                adjMat[i][j] = 0;
+        }
+
+        count = 0;
+
+        bfs(adjMat);
+
+        fprintf(fb, "%d\t%d\n", n, count);
+
+        /* Worst Case */
+
+        for(int i = 0; i < n; i++)
+            indeg[i] = 0;
+
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < n; j++)
+                adjMat[i][j] = 0;
+        }
+
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = i + 1; j < n; j++)
             {
                 adjMat[i][j] = 1;
                 indeg[j]++;
@@ -62,14 +93,20 @@ void plotter()
         }
 
         count = 0;
+
         bfs(adjMat);
-        fprintf(f1, "%d\t%d\n", n, count);
+
+        fprintf(fw, "%d\t%d\n", n, count);
     }
 
-    fclose(f1);
+    fclose(fb);
+    fclose(fw);
+
+    printf("Files Generated Successfully\n");
 }
 
-void main()
+int main()
 {
     plotter();
+    return 0;
 }

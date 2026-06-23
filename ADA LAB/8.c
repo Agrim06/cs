@@ -1,86 +1,93 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int isCycle = 0, components = 0, n, count = 0, isTester;
+int n;
+int count;
 
-void bfs(int mat[n][n], int *vis, int source)
+void bfs(int mat[n][n], int vis[], int source)
 {
-    int queue[n], parent[n];
-    int rear = -1, front = -1;
+    int queue[n];
+    int front = 0;
+    int rear = 0;
+
     vis[source] = 1;
-    queue[++rear] = source;
-    parent[rear] = -1;
-    while (rear != front)
+    queue[rear++] = source;
+
+    while(front < rear)
     {
-        int curr = queue[++front];
-        int par = parent[front];
-        if (isTester)
-            printf("%d ", curr);
-        for (int i = 0; i < n; i++)
+        int curr = queue[front++];
+
+        for(int i=0;i<n;i++)
         {
             count++;
-            if (i != par && mat[curr][i] && vis[i])
-                isCycle = 1;
-            if (mat[curr][i] && !vis[i])
-            {
-                queue[++rear] = i;
-                parent[rear] = curr;
-                vis[i] = 1;
-            }
-        }
-    }
-}
 
-void checkConnectivity(int mat[n][n])
-{
-    int vis[n], k = 1;
-    for (int i = 0; i < n; i++)
-    {
-        vis[i] = 0;
-    }
-    for (int i = 0; i < n; i++)
-    {
-        if (vis[i] == 0)
-        {
-            components++;
-            if (isTester)
-                printf("\nConnected component %d: ", k++);
-            bfs(mat, &vis[0], i);
+            if(mat[curr][i] && !vis[i])
+            {
+                vis[i] = 1;
+                queue[rear++] = i;
+            }
         }
     }
 }
 
 void plotter()
 {
-    isTester = 0;
-    FILE *f1 = fopen("bfsadjMat.txt", "w");
-    for (int k = 1; k <= 10; k++)
+    FILE *fb,*fw;
+
+    fb = fopen("BFSbest.txt","w");
+    fw = fopen("BFSworst.txt","w");
+
+    for(int k=1;k<=10;k++)
     {
         n = k;
-        int adjMat[n][n];
 
-        for (int i = 0; i < n; i++)
+        int adjMat[n][n];
+        int vis[n];
+
+        for(int i=0;i<n;i++)
+            vis[i]=0;
+
+        for(int i=0;i<n;i++)
         {
-            for (int j = 0; j < n; j++)
+            for(int j=0;j<n;j++)
+                adjMat[i][j]=0;
+        }
+
+        count=0;
+
+        bfs(adjMat,vis,0);
+
+        fprintf(fb,"%d\t%d\n",n,count);
+
+        for(int i=0;i<n;i++)
+            vis[i]=0;
+
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
             {
-                if (i != j)
-                {
-                    adjMat[i][j] = 1;
-                }
+                if(i!=j)
+                    adjMat[i][j]=1;
                 else
-                {
-                    adjMat[i][j] = 0;
-                }
+                    adjMat[i][j]=0;
             }
         }
-        count = 0;
-        checkConnectivity(adjMat);
-        fprintf(f1, "%d\t%d\n", n, count);
+
+        count=0;
+
+        bfs(adjMat,vis,0);
+
+        fprintf(fw,"%d\t%d\n",n,count);
     }
-    fclose(f1);
+
+    fclose(fb);
+    fclose(fw);
+
+    printf("Files Generated Successfully\n");
 }
 
-void main()
+int main()
 {
     plotter();
+    return 0;
 }

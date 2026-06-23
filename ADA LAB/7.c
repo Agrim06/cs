@@ -1,71 +1,85 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int isCycle = 0, components = 0, n, count = 0, isTester = 0;
+int n;
+int count;
 
-void dfs(int mat[n][n], int *vis, int source, int par)
+void dfs(int mat[n][n], int vis[], int source)
 {
     vis[source] = 1;
 
-    if (isTester)
-        printf("%d ", source);
-
-    for (int i = 0; i < n; i++)
+    for(int i=0;i<n;i++)
     {
         count++;
-        if (mat[source][i] && vis[i] && i != par)
-            isCycle = 1;
-        else if (mat[source][i] && !vis[i])
-            dfs(mat, vis, i, source);
+
+        if(mat[source][i] && !vis[i])
+            dfs(mat,vis,i);
     }
-}
-
-void checkConnectivity(int mat[n][n])
-{
-    int vis[n], k = 1;
-
-    for (int i = 0; i < n; i++)
-        vis[i] = 0;
-
-    for (int i = 0; i < n; i++)
-        if (!vis[i])
-        {
-            components++;
-
-            if (isTester)
-                printf("\nComponent %d: ", k++);
-            dfs(mat, &vis[0], i, -1);
-        }
 }
 
 void plotter()
 {
-    FILE *f1 = fopen("dfsadjMat.txt", "w");
-    isTester = 0;
+    FILE *f1,*f2;
 
-    for (int k = 1; k <= 10; k++)
+    f1=fopen("DFSbest.txt","w");
+    f2=fopen("DFSworst.txt","w");
+
+    for(int k=1;k<=10;k++)
     {
-        n = k;
-        int adjMat[n][n];
+        n=k;
 
-        for (int i = 0; i < n; i++)
+        int adjMat[n][n];
+        int vis[n];
+
+        for(int i=0;i<n;i++)
+            vis[i]=0;
+
+        for(int i=0;i<n;i++)
         {
-            for (int j = 0; j < n; j++)
+            for(int j=0;j<n;j++)
             {
-                if (i != j)
-                    adjMat[i][j] = 1;
+                if(i==j)
+                    adjMat[i][j]=0;
                 else
-                    adjMat[i][j] = 0;
+                    adjMat[i][j]=0;
             }
         }
-        count = 0;
-        checkConnectivity(adjMat);
-        fprintf(f1, "%d\t%d\n", n, count);
+
+        count=0;
+
+        dfs(adjMat,vis,0);
+
+        fprintf(f1,"%d\t%d\n",n,count);
+
+        for(int i=0;i<n;i++)
+            vis[i]=0;
+
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(i!=j)
+                    adjMat[i][j]=1;
+                else
+                    adjMat[i][j]=0;
+            }
+        }
+
+        count=0;
+
+        dfs(adjMat,vis,0);
+
+        fprintf(f2,"%d\t%d\n",n,count);
     }
+
     fclose(f1);
+    fclose(f2);
+
+    printf("Files Generated Successfully\n");
 }
 
-void main()
+int main()
 {
     plotter();
+    return 0;
 }

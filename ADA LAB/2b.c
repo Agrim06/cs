@@ -22,7 +22,7 @@ void plotter()
 {
     srand(time(NULL));
     int *arr;
-    int n, key, r;
+    int n, key;
     FILE *f1, *f2, *f3;
     f1 = fopen("binarybest.txt", "w");
     f2 = fopen("binaryavg.txt", "w");
@@ -37,20 +37,20 @@ void plotter()
         int mid = (n - 1) / 2;
         *(arr + mid) = 0;
         count = 0;
-        r = binarySearch(0, arr, n - 1, 0);
+        binarySearch(0, arr, n - 1, 0);
         fprintf(f1, "%d\t%d\n", n, count);
 
         for (int i = 0; i < n; i++)
             *(arr + i) = i+1;
         key = rand() % n + 1;
         count = 0;
-        r = binarySearch(key, arr, n - 1, 0);
+        binarySearch(key, arr, n - 1, 0);
         fprintf(f2, "%d\t%d\n", n, count);
 
         for (int i = 0; i < n; i++)
             *(arr + i) = 0;
         count = 0;
-        r = binarySearch(1, arr, n - 1, 0);
+        binarySearch(1, arr, n - 1, 0);
         fprintf(f3, "%d\t%d\n", n,count);
         
         n = n * 2;
