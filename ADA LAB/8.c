@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int isCycle = 0, components = 0, n, opcount = 0, isTester;
+int isCycle = 0, components = 0, n, count = 0, isTester;
 
 void bfs(int mat[n][n], int *vis, int source)
 {
@@ -18,7 +18,7 @@ void bfs(int mat[n][n], int *vis, int source)
             printf("%d ", curr);
         for (int i = 0; i < n; i++)
         {
-            opcount++;
+            count++;
             if (i != par && mat[curr][i] && vis[i])
                 isCycle = 1;
             if (mat[curr][i] && !vis[i])
@@ -73,9 +73,9 @@ void plotter()
                 }
             }
         }
-        opcount = 0;
+        count = 0;
         checkConnectivity(adjMat);
-        fprintf(f1, "%d\t%d\n", n, opcount);
+        fprintf(f1, "%d\t%d\n", n, count);
     }
     fclose(f1);
 }

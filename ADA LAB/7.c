@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int isCycle = 0, components = 0, n, opcount = 0, isTester = 0;
+int isCycle = 0, components = 0, n, count = 0, isTester = 0;
 
 void dfs(int mat[n][n], int *vis, int source, int par)
 {
@@ -12,7 +12,7 @@ void dfs(int mat[n][n], int *vis, int source, int par)
 
     for (int i = 0; i < n; i++)
     {
-        opcount++;
+        count++;
         if (mat[source][i] && vis[i] && i != par)
             isCycle = 1;
         else if (mat[source][i] && !vis[i])
@@ -58,9 +58,9 @@ void plotter()
                     adjMat[i][j] = 0;
             }
         }
-        opcount = 0;
+        count = 0;
         checkConnectivity(adjMat);
-        fprintf(f1, "%d\t%d\n", n, opcount);
+        fprintf(f1, "%d\t%d\n", n, count);
     }
     fclose(f1);
 }

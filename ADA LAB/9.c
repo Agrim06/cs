@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int n, opcount = 0, top = -1;
+int n, count = 0, top = -1;
 
 int dfs(int mat[n][n], int *vis, int *track, int source, int *stack)
 {
@@ -10,7 +10,7 @@ int dfs(int mat[n][n], int *vis, int *track, int source, int *stack)
 
     for (int i = 0; i < n; i++)
     {
-        opcount++;
+        count++;
         if (mat[source][i] && track[i] && vis[i])
         {
             return 1;
@@ -72,9 +72,9 @@ void plotter()
             }
         }
 
-        opcount = 0, top = -1;
+        count = 0, top = -1;
         checkConnectivity(adjMat);
-        fprintf(f1, "%d\t%d\n", n, opcount);
+        fprintf(f1, "%d\t%d\n", n, count);
     }
 
     fclose(f1);

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int n, indeg[20], opcount = 0, queue[20], front = -1, rear = -1;
+int n, indeg[20], count = 0, queue[20], front = -1, rear = -1;
 
 int bfs(int mat[n][n])
 {
@@ -23,7 +23,7 @@ int bfs(int mat[n][n])
 
         for (int i = 0; i < n; i++)
         {
-            opcount++;
+            count++;
             if (mat[curr][i])
             {
                 indeg[i]--;
@@ -61,9 +61,9 @@ void plotter()
             }
         }
 
-        opcount = 0;
+        count = 0;
         bfs(adjMat);
-        fprintf(f1, "%d\t%d\n", n, opcount);
+        fprintf(f1, "%d\t%d\n", n, count);
     }
 
     fclose(f1);
