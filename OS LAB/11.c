@@ -96,6 +96,7 @@ int main()
             {
                 queue[rear++] = i;
                 visited[i] = 1;
+                
             }
         }
 
