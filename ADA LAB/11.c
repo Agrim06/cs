@@ -48,7 +48,7 @@ void heapSort(int *arr, int n)
 
         heapify(arr, 0, i);
     }
-}
+}   
 
 void plotter()
 {

@@ -59,8 +59,6 @@ void plotter()
 
         int adjMat[n][n];
 
-        /* Best Case : No Edges */
-
         for(int i = 0; i < n; i++)
         {
             for(int j = 0; j < n; j++)
@@ -73,8 +71,6 @@ void plotter()
         topologicalSort(adjMat);
 
         fprintf(fb, "%d\t%d\n", n, count);
-
-        /* Worst Case : Complete DAG */
 
         for(int i = 0; i < n; i++)
         {

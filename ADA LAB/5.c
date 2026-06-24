@@ -15,6 +15,7 @@ void merge(int *arr, int beg, int mid, int end)
         left[i] = arr[beg + i];
     for (int j = 0; j < n2; j++)
         right[j] = arr[mid + j + 1];
+        
     i = 0;
     j = 0;
     k = beg;

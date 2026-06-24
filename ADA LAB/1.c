@@ -38,22 +38,23 @@ int gcdConsecutiveIntegerCheck(int m, int n)
 
 int modifiedEuclids(int m, int n)
 {
-    if (n == 0 || m == 0)
-        return m > n ? m : n;
+    count = 1; 
 
-    count = 0;
-
-    while (++count && m != n)
+    while (m != n)
     {
-        
         if (m > n)
             m -= n;
         else
             n -= m;
+
+        count++;
     }
 
-    return n;
+    count++; 
+
+    return m;
 }
+
 void plotter()
 {
     FILE *f1 = fopen("euclidBest.txt", "w");

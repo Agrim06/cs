@@ -55,8 +55,6 @@ void plotter()
 
         int adjMat[n][n];
 
-        /* Best Case */
-
         for(int i = 0; i < n; i++)
             indeg[i] = 0;
 
@@ -70,9 +68,7 @@ void plotter()
 
         bfs(adjMat);
 
-        fprintf(fb, "%d\t%d\n", n, count);
-
-        /* Worst Case */
+        fprintf(fb, "%d\t%d\n", n, count); 
 
         for(int i = 0; i < n; i++)
             indeg[i] = 0;
