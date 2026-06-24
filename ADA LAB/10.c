@@ -9,9 +9,10 @@ int count;
 
 int bfs(int mat[n][n])
 {
-    int count = 0;
+    int removed = 0;
 
     front = rear = -1;
+    count = 0;
 
     for(int i = 0; i < n; i++)
     {
@@ -23,6 +24,7 @@ int bfs(int mat[n][n])
     {
         int curr = queue[++front];
 
+        removed++;
         count++;
 
         for(int i = 0; i < n; i++)
@@ -39,7 +41,7 @@ int bfs(int mat[n][n])
         }
     }
 
-    return count != n;
+    return removed != n;
 }
 
 void plotter()
@@ -59,25 +61,19 @@ void plotter()
             indeg[i] = 0;
 
         for(int i = 0; i < n; i++)
-        {
             for(int j = 0; j < n; j++)
                 adjMat[i][j] = 0;
-        }
-
-        count = 0;
 
         bfs(adjMat);
 
-        fprintf(fb, "%d\t%d\n", n, count); 
+        fprintf(fb, "%d\t%d\n", n, count);
 
         for(int i = 0; i < n; i++)
             indeg[i] = 0;
 
         for(int i = 0; i < n; i++)
-        {
             for(int j = 0; j < n; j++)
                 adjMat[i][j] = 0;
-        }
 
         for(int i = 0; i < n; i++)
         {
@@ -87,8 +83,6 @@ void plotter()
                 indeg[j]++;
             }
         }
-
-        count = 0;
 
         bfs(adjMat);
 
