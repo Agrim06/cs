@@ -9,39 +9,87 @@ int count;
 
 int bfs(int mat[n][n])
 {
-    int removed = 0;
-
     front = rear = -1;
     count = 0;
 
-    for(int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
     {
-        if(indeg[i] == 0)
+        if (indeg[i] == 0)
             queue[++rear] = i;
     }
 
-    while(front != rear)
+    while (front != rear)
     {
         int curr = queue[++front];
 
-        removed++;
         count++;
 
-        for(int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             count++;
 
-            if(mat[curr][i])
+            if (mat[curr][i])
             {
                 indeg[i]--;
 
-                if(indeg[i] == 0)
+                if (indeg[i] == 0)
                     queue[++rear] = i;
             }
         }
     }
 
-    return removed != n;
+    return 0;
+}
+
+void tester()
+{
+    printf("\n--- TOPOLOGICAL SORT (SOURCE REMOVAL) TESTER ---\n");
+    printf("Enter number of vertices (max 20): ");
+    scanf("%d", &n);
+
+    if (n > 20 || n <= 0)
+    {
+        printf("Invalid vertex count! Maximum allowed is 20.\n");
+        return;
+    }
+
+    int adjMat[n][n];
+
+    for (int i = 0; i < n; i++)
+    {
+        indeg[i] = 0;
+    }
+
+    printf("Enter the adjacency matrix (%dx%d):\n", n, n);
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            scanf("%d", &adjMat[i][j]);
+            if (adjMat[i][j] == 1)
+            {
+                indeg[j]++;
+            }
+        }
+    }
+
+    bfs(adjMat);
+
+    if (rear + 1 == n)
+    {
+        printf("\nTopological Sorting Order (Source Removal):\n");
+        for (int i = 0; i <= rear; i++)
+        {
+            printf("%d ", queue[i]);
+        }
+        printf("\n");
+    }
+    else
+    {
+        printf("\nGraph contains a cycle! Topological ordering is not possible.\n");
+    }
+
+    printf("Operation count = %d\n", count);
 }
 
 void plotter()
@@ -51,33 +99,33 @@ void plotter()
     fb = fopen("SrcRemBest.txt", "w");
     fw = fopen("SrcRemWorst.txt", "w");
 
-    for(int k = 1; k <= 20; k++)
+    for (int k = 1; k <= 20; k++)
     {
         n = k;
 
         int adjMat[n][n];
 
-        for(int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
             indeg[i] = 0;
 
-        for(int i = 0; i < n; i++)
-            for(int j = 0; j < n; j++)
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
                 adjMat[i][j] = 0;
 
         bfs(adjMat);
 
         fprintf(fb, "%d\t%d\n", n, count);
 
-        for(int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
             indeg[i] = 0;
 
-        for(int i = 0; i < n; i++)
-            for(int j = 0; j < n; j++)
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
                 adjMat[i][j] = 0;
 
-        for(int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
-            for(int j = i + 1; j < n; j++)
+            for (int j = i + 1; j < n; j++)
             {
                 adjMat[i][j] = 1;
                 indeg[j]++;
@@ -92,11 +140,24 @@ void plotter()
     fclose(fb);
     fclose(fw);
 
-    printf("Files Generated Successfully\n");
+    printf("Data files generated successfully!\n");
 }
 
 int main()
 {
-    plotter();
+    int choice;
+    while (1)
+    {
+        printf("\n1. Tester\n2. Plotter\n0. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+        if (choice == 0)
+            break;
+        if (choice == 1)
+            tester();
+        else if (choice == 2)
+            plotter();
+        else
+            printf("Invalid choice!\n");
+    }
     return 0;
 }

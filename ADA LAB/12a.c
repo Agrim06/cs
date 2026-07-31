@@ -3,7 +3,7 @@
 
 int n, count, paths[100][100];
 
-int warshall(int adjMat[n][n], int n)
+void warshall(int adjMat[n][n], int n)
 {
     count = 0;
     for (int i = 0; i < n; i++)
@@ -20,6 +20,44 @@ int warshall(int adjMat[n][n], int n)
                     paths[i][j] = paths[i][j] || (paths[i][k] && paths[k][j]);
                 }
             }
+}
+
+void tester()
+{
+    printf("\n--- WARSHALL'S ALGORITHM TESTER ---\n");
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    if (n > 100)
+    {
+        printf("Number of vertices cannot exceed 100!\n");
+        return;
+    }
+
+    int adjMat[n][n];
+
+    printf("Enter the adjacency matrix (%dx%d):\n", n, n);
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            scanf("%d", &adjMat[i][j]);
+        }
+    }
+
+    warshall(adjMat, n);
+
+    printf("\nTransitive Closure (Path Matrix):\n");
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            printf("%d ", paths[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\nOperation count = %d\n", count);
 }
 
 void plotter()
@@ -52,9 +90,24 @@ void plotter()
     }
     fclose(f1);
     fclose(f2);
+    printf("Data files generated successfully!\n");
 }
 
-void main()
+int main()
 {
-    plotter();
+    int choice;
+    while (1)
+    {
+        printf("\n1. Tester\n2. Plotter\n0. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+        if (choice == 0)
+            break;
+        if (choice == 1)
+            tester();
+        else if (choice == 2)
+            plotter();
+        else
+            printf("Invalid choice!\n");
+    }
+    return 0;
 }

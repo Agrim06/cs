@@ -54,7 +54,7 @@ void worst(int arr[], int beg, int end)
     if (beg < end)
     {
         int mid = (beg + end) / 2;
-        int i, j, k;
+        int i, j;
         int n1 = (mid - beg) + 1;
         int n2 = end - mid;
         int a[n1], b[n2];
@@ -70,6 +70,47 @@ void worst(int arr[], int beg, int end)
         for (j = i; j < n2; j++)
             arr[j + 1] = b[j];
     }
+}
+
+void printArray(int *arr, int n)
+{
+    printf("Sorted Array: ");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+void tester()
+{
+    int n;
+    int *arr;
+
+    printf("\n--- MERGE SORT TESTER ---\n");
+    printf("Enter the number of elements: ");
+    scanf("%d", &n);
+
+    arr = (int *)malloc(n * sizeof(int));
+    if (arr == NULL)
+    {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    printf("Enter %d elements:\n", n);
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%d", &arr[i]);
+    }
+
+    count = 0;
+    mergeSort(arr, 0, n - 1);
+
+    printArray(arr, n);
+    printf("Number of comparisons = %d\n", count);
+
+    free(arr);
 }
 
 void plotter()
@@ -110,10 +151,24 @@ void plotter()
     fclose(f2);
     fclose(f3);
     fclose(f4);
-    printf("Data is entered into file\n");
+    printf("Data files generated successfully!\n");
 }
 
-void main()
+int main()
 {
-    plotter();
+    int choice;
+    while (1)
+    {
+        printf("\n1. Tester\n2. Plotter\n0. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+        if (choice == 0)
+            break;
+        if (choice == 1)
+            tester();
+        else if (choice == 2)
+            plotter();
+        else
+            printf("Invalid choice!\n");
+    }
+    return 0;
 }

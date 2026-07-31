@@ -3,6 +3,7 @@
 #include <time.h>
 
 int count;
+
 int bubblesort(int *a, int n)
 {
     count = 0;
@@ -70,6 +71,79 @@ void selectionSort(int *arr, int n)
             arr[pos] = arr[i];
             arr[i] = temp;
         }
+    }
+}
+
+void printArray(int *arr, int n)
+{
+    printf("Sorted Array: ");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+void tester()
+{
+    int choice, n;
+    int *arr;
+
+    while (1)
+    {
+        printf("\n--- SORTING ALGORITHMS TESTER ---\n");
+        printf("1. Bubble Sort\n");
+        printf("2. Insertion Sort\n");
+        printf("3. Selection Sort\n");
+        printf("0. Back to Main Menu\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        if (choice == 0)
+            break;
+
+        if (choice < 1 || choice > 3)
+        {
+            printf("Invalid choice!\n");
+            continue;
+        }
+
+        printf("Enter number of elements: ");
+        scanf("%d", &n);
+
+        arr = (int *)malloc(n * sizeof(int));
+        if (arr == NULL)
+        {
+            printf("Memory allocation failed!\n");
+            return;
+        }
+
+        printf("Enter %d elements:\n", n);
+        for (int i = 0; i < n; i++)
+        {
+            scanf("%d", &arr[i]);
+        }
+
+        switch (choice)
+        {
+            case 1:
+                bubblesort(arr, n);
+                printf("\n[Bubble Sort Results]\n");
+                break;
+            case 2:
+                insertionSort(arr, n);
+                printf("\n[Insertion Sort Results]\n");
+                break;
+            case 3:
+                selectionSort(arr, n);
+                printf("\n[Selection Sort Results]\n");
+                break;
+        }
+
+        printArray(arr, n);
+        printf("Number of comparisons = %d\n", count);
+
+        free(arr);
     }
 }
 
@@ -165,7 +239,6 @@ void plotter3()
 {
     FILE *f;
     f = fopen("selectionsort.txt", "w");
-    int j;
     int n = 10;
     while (n <= 30000)
     {
@@ -181,11 +254,32 @@ void plotter3()
             n += 10000;
         free(a);
     }
+    fclose(f);
 }
 
-void main()
+void plotter()
 {
     plotter1();
     plotter2();
     plotter3();
+    printf("Data files generated successfully!\n");
+}
+
+int main()
+{
+    int choice;
+    while (1)
+    {
+        printf("\n1. Tester\n2. Plotter\n0. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+        if (choice == 0)
+            break;
+        if (choice == 1)
+            tester();
+        else if (choice == 2)
+            plotter();
+        else
+            printf("Invalid choice!\n");
+    }
+    return 0;
 }

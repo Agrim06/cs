@@ -5,7 +5,7 @@
 
 int n, count, dist[100][100];
 
-int floyds(int adjMat[n][n], int n)
+void floyds(int adjMat[n][n], int n)
 {
     count = 0;
     for (int i = 0; i < n; i++)
@@ -33,6 +33,48 @@ int floyds(int adjMat[n][n], int n)
         }
 }
 
+void tester()
+{
+    printf("\n--- FLOYD'S ALGORITHM TESTER ---\n");
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    if (n > 100)
+    {
+        printf("Number of vertices cannot exceed 100!\n");
+        return;
+    }
+
+    int adjMat[n][n];
+
+    printf("Enter the cost matrix (%dx%d):\n", n, n);
+    printf("(Use -1 to represent infinity / no direct edge, and 0 for self-loops)\n");
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            scanf("%d", &adjMat[i][j]);
+        }
+    }
+
+    floyds(adjMat, n);
+
+    printf("\nAll-Pairs Shortest Path Matrix (Distance Matrix):\n");
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (dist[i][j] == INT_MAX)
+                printf("INF\t");
+            else
+                printf("%d\t", dist[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\nOperation count = %d\n", count);
+}
+
 void plotter()
 {
     srand(time(NULL));
@@ -44,16 +86,31 @@ void plotter()
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
                 if (i != j)
-                    adjMat[i][j] = rand();
+                    adjMat[i][j] = rand() % 100 + 1;
                 else
                     adjMat[i][j] = 0;
         floyds(adjMat, n);
         fprintf(fp, "%d\t%d\n", n, count);
     }
     fclose(fp);
+    printf("Data files generated successfully!\n");
 }
 
-void main()
+int main()
 {
-    plotter();
+    int choice;
+    while (1)
+    {
+        printf("\n1. Tester\n2. Plotter\n0. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+        if (choice == 0)
+            break;
+        if (choice == 1)
+            tester();
+        else if (choice == 2)
+            plotter();
+        else
+            printf("Invalid choice!\n");
+    }
+    return 0;
 }

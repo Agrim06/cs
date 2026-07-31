@@ -32,6 +32,7 @@ void heapify(int *arr, int i, int size)
 
 void heapSort(int *arr, int n)
 {
+    count1 = 0;
     for (int i = (n / 2) - 1; i >= 0; i--)
     {
         heapify(arr, i, n);
@@ -48,7 +49,49 @@ void heapSort(int *arr, int n)
 
         heapify(arr, 0, i);
     }
-}   
+}
+
+void printArray(int *arr, int n)
+{
+    printf("Sorted Array: ");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+void tester()
+{
+    int n;
+    int *arr;
+
+    printf("\n--- HEAP SORT TESTER ---\n");
+    printf("Enter the number of elements: ");
+    scanf("%d", &n);
+
+    arr = (int *)malloc(n * sizeof(int));
+    if (arr == NULL)
+    {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    printf("Enter %d elements:\n", n);
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%d", &arr[i]);
+    }
+
+    heapSort(arr, n);
+
+    printArray(arr, n);
+    printf("Heap construction comparisons = %d\n", count2);
+    printf("Sorting extraction comparisons = %d\n", count1);
+    printf("Total comparisons = %d\n", count1 + count2);
+
+    free(arr);
+}
 
 void plotter()
 {
@@ -87,9 +130,24 @@ void plotter()
     fclose(f1);
     fclose(f2);
     fclose(f3);
+    printf("Data files generated successfully!\n");
 }
 
-void main()
+int main()
 {
-    plotter();
+    int choice;
+    while (1)
+    {
+        printf("\n1. Tester\n2. Plotter\n0. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+        if (choice == 0)
+            break;
+        if (choice == 1)
+            tester();
+        else if (choice == 2)
+            plotter();
+        else
+            printf("Invalid choice!\n");
+    }
+    return 0;
 }

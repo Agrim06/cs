@@ -40,11 +40,50 @@ void quicksort(int *arr, int beg, int end)
     {
         int split = partition(arr, beg, end);
         quicksort(arr, beg, split - 1);
-
         quicksort(arr, split + 1, end);
     }
 }
 
+void printArray(int *arr, int n)
+{
+    printf("Sorted Array: ");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+void tester()
+{
+    int n;
+    int *arr;
+
+    printf("\n--- QUICK SORT TESTER ---\n");
+    printf("Enter the number of elements: ");
+    scanf("%d", &n);
+
+    arr = (int *)malloc(n * sizeof(int));
+    if (arr == NULL)
+    {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    printf("Enter %d elements:\n", n);
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%d", &arr[i]);
+    }
+
+    count = 0;
+    quicksort(arr, 0, n - 1);
+
+    printArray(arr, n);
+    printf("Number of comparisons = %d\n", count);
+
+    free(arr);
+}
 
 void plotter()
 {
@@ -83,9 +122,24 @@ void plotter()
     fclose(f1);
     fclose(f2);
     fclose(f3);
+    printf("Data files generated successfully!\n");
 }
 
-void main()
+int main()
 {
-    plotter();
+    int choice;
+    while (1)
+    {
+        printf("\n1. Tester\n2. Plotter\n0. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+        if (choice == 0)
+            break;
+        if (choice == 1)
+            tester();
+        else if (choice == 2)
+            plotter();
+        else
+            printf("Invalid choice!\n");
+    }
+    return 0;
 }
