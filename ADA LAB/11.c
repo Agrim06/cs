@@ -55,12 +55,12 @@ void heapSort(int arr[], int n)
 
 void tester()
 {
-    int arr[20];
     int n, i;
 
     printf("Enter the number of elements: ");
     scanf("%d", &n);
 
+    int arr[n];
     printf("Enter the elements:\n");
 
     for (i = 0; i < n; i++)
@@ -80,7 +80,6 @@ void tester()
 void plotter()
 {
     FILE *fp1, *fp2;
-    int arr[1000];
     int n, i;
 
     fp1 = fopen("heapbest.txt", "w");
@@ -88,7 +87,7 @@ void plotter()
 
     for (n = 10; n <= 200; n += 10)
     {
-
+        int arr[n];
         for (i = 0; i < n; i++)
             arr[i] = i + 1;
 

@@ -46,13 +46,6 @@ void tester()
     printf("\n--- TOPOLOGICAL SORT (SOURCE REMOVAL) TESTER ---\n");
     printf("Enter number of vertices (max 20): ");
     scanf("%d", &n);
-
-    if (n > 20 || n <= 0)
-    {
-        printf("Invalid vertex count! Maximum allowed is 20.\n");
-        return;
-    }
-
     int mat[n][n];
 
     for (int i = 0; i < n; i++)
@@ -103,16 +96,16 @@ void plotter()
     {
         n = k;
 
-        int adjMat[n][n];
+        int mat[n][n];
 
         for (int i = 0; i < n; i++)
             indeg[i] = 0;
 
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
-                adjMat[i][j] = 0;
+                mat[i][j] = 0;
 
-        bfs(adjMat);
+        bfs(mat);
 
         fprintf(fb, "%d\t%d\n", n, count);
 
@@ -121,18 +114,18 @@ void plotter()
 
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
-                adjMat[i][j] = 0;
+                mat[i][j] = 0;
 
         for (int i = 0; i < n; i++)
         {
             for (int j = i + 1; j < n; j++)
             {
-                adjMat[i][j] = 1;
+                mat[i][j] = 1;
                 indeg[j]++;
             }
         }
 
-        bfs(adjMat);
+        bfs(mat);
 
         fprintf(fw, "%d\t%d\n", n, count);
     }

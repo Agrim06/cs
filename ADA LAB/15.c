@@ -91,7 +91,7 @@ void plotter()
     srand(time(NULL));
     FILE *fp = fopen("dijkstra.txt", "w");
 
-    for (int k = 2; k <= 12; k++)
+    for (int k = 2; k <= 20; k++)
     {
         n = k;
         int cost[n][n];
