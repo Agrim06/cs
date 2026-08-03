@@ -3,12 +3,12 @@
 
 int n, count, paths[100][100];
 
-void warshall(int adjMat[n][n], int n)
+void warshall(int mat[n][n], int n)
 {
     count = 0;
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            paths[i][j] = adjMat[i][j];
+            paths[i][j] = mat[i][j];
 
     for (int k = 0; k < n; k++)
         for (int i = 0; i < n; i++)
@@ -34,18 +34,18 @@ void tester()
         return;
     }
 
-    int adjMat[n][n];
+    int mat[n][n];
 
     printf("Enter the adjacency matrix (%dx%d):\n", n, n);
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
-            scanf("%d", &adjMat[i][j]);
+            scanf("%d", &mat[i][j]);
         }
     }
 
-    warshall(adjMat, n);
+    warshall(mat, n);
 
     printf("\nTransitive Closure (Path Matrix):\n");
     for (int i = 0; i < n; i++)
@@ -68,25 +68,28 @@ void plotter()
     for (int k = 1; k <= 10; k++)
     {
         n = k;
-        int adjMat[n][n];
+        int mat[n][n];
         
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                mat[i][j] = 0;
+
+        for (int i = 0; i < n - 1; i++)
+            mat[i][i + 1] = 1;
+        mat[n - 1][0] = 1;
+        
+        warshall(mat, n);
+        fprintf(f1, "%d\t%d\n", n, count);
+
         for (int j = 0; j < n; j++)
             for (int i = 0; i < n; i++)
                 if (i != j)
-                    adjMat[i][j] = 1;
+                    mat[i][j] = 1;
                 else
-                    adjMat[i][j] = 0;
-        warshall(adjMat, n);
+                    mat[i][j] = 0;
+        warshall(mat, n);
         fprintf(f2, "%d\t%d\n", n, count);
-
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                adjMat[i][j] = 0;
-        for (int i = 0; i < n - 1; i++)
-            adjMat[i][i + 1] = 1;
-        adjMat[n - 1][0] = 1;
-        warshall(adjMat, n);
-        fprintf(f1, "%d\t%d\n", n, count);
+  
     }
     fclose(f1);
     fclose(f2);

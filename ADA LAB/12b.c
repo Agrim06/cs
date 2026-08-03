@@ -5,15 +5,15 @@
 
 int n, count, dist[100][100];
 
-void floyds(int adjMat[n][n], int n)
+void floyds(int mat[n][n], int n)
 {
     count = 0;
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            if (adjMat[i][j] == -1)
+            if (mat[i][j] == -1)
                 dist[i][j] = INT_MAX;
             else
-                dist[i][j] = adjMat[i][j];
+                dist[i][j] = mat[i][j];
                 
     for (int k = 0; k < n; k++)
         for (int i = 0; i < n; i++)
@@ -45,7 +45,7 @@ void tester()
         return;
     }
 
-    int adjMat[n][n];
+    int mat[n][n];
 
     printf("Enter the cost matrix (%dx%d):\n", n, n);
     printf("(Use -1 to represent infinity / no direct edge, and 0 for self-loops)\n");
@@ -53,11 +53,11 @@ void tester()
     {
         for (int j = 0; j < n; j++)
         {
-            scanf("%d", &adjMat[i][j]);
+            scanf("%d", &mat[i][j]);
         }
     }
 
-    floyds(adjMat, n);
+    floyds(mat, n);
 
     printf("\nAll-Pairs Shortest Path Matrix (Distance Matrix):\n");
     for (int i = 0; i < n; i++)
@@ -82,14 +82,14 @@ void plotter()
     for (int k = 2; k < 12; k++)
     {
         n = k;
-        int adjMat[n][n];
+        int mat[n][n];
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
                 if (i != j)
-                    adjMat[i][j] = rand() % 100 + 1;
+                    mat[i][j] = rand() % 100 + 1;
                 else
-                    adjMat[i][j] = 0;
-        floyds(adjMat, n);
+                    mat[i][j] = 0;
+        floyds(mat, n);
         fprintf(fp, "%d\t%d\n", n, count);
     }
     fclose(fp);

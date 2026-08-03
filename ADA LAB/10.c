@@ -53,7 +53,7 @@ void tester()
         return;
     }
 
-    int adjMat[n][n];
+    int mat[n][n];
 
     for (int i = 0; i < n; i++)
     {
@@ -65,15 +65,15 @@ void tester()
     {
         for (int j = 0; j < n; j++)
         {
-            scanf("%d", &adjMat[i][j]);
-            if (adjMat[i][j] == 1)
+            scanf("%d", &mat[i][j]);
+            if (mat[i][j] == 1)
             {
                 indeg[j]++;
             }
         }
     }
 
-    bfs(adjMat);
+    bfs(mat);
 
     if (rear + 1 == n)
     {

@@ -4,14 +4,14 @@
 
 int count;
 
-int linearSearch(int *a, int n, int k)
+int linearSearch(int *arr, int n, int k)
 {
     int i;
     count = 0;
     for (i = 0; i < n; i++)
     {
         count++;
-        if (a[i] == k)
+        if (arr[i] == k)
         {
             return i;
         }

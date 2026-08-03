@@ -5,15 +5,15 @@ int n;
 int count;
 int isCyclic;
 
-void bfs(int mat[n][n], int vis[], int start, int comp[], int compId)
+void bfs(int mat[n][n], int vis[], int source, int comp[], int compId)
 {
     int queue[n];
     int parent[n];
     int front = 0, rear = 0;
 
-    vis[start] = 1;
-    comp[start] = compId;
-    queue[rear] = start;
+    vis[source] = 1;
+    comp[source] = compId;
+    queue[rear] = source;
     parent[rear] = -1;
     rear++;
 
@@ -126,12 +126,18 @@ void plotter()
         int vis[n];
         int comp[n];
 
-        for (int i = 0; i < n; i++)
-        {
+        for (int i = 0; i < n; i++){
+
             vis[i] = 0;
             comp[i] = 0;
+
             for (int j = 0; j < n; j++)
                 adjMat[i][j] = 0;
+        }
+
+        for (int i = 0; i < n - 1; i++){
+            adjMat[i][i + 1] = 1;
+            adjMat[i + 1][i] = 1;
         }
 
         count = 0;

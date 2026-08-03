@@ -112,8 +112,15 @@ void plotter()
         {
             vis[i] = 0;
             comp[i] = 0;
+
             for (int j = 0; j < n; j++)
                 adjMat[i][j] = 0;
+        }
+
+        for (int i = 0; i < n - 1; i++)
+        {
+            adjMat[i][i + 1] = 1;
+            adjMat[i + 1][i] = 1;
         }
 
         count = 0;

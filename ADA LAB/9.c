@@ -13,7 +13,7 @@ int dfs(int mat[n][n], int vis[], int track[], int source, int stack[])
         count++;
 
         if (mat[source][i] && track[i] && vis[i])
-            return 1; // Cycle detected
+            return 1;
 
         if (mat[source][i] && !vis[i])
         {
@@ -43,11 +43,11 @@ int topologicalSort(int mat[n][n], int stack[])
         if (!vis[i])
         {
             if (dfs(mat, vis, track, i, stack))
-                return 1; // Graph contains a cycle
+                return 1; 
         }
     }
 
-    return 0; // Successful topological ordering
+    return 0; 
 }
 
 void tester()
@@ -104,10 +104,13 @@ void plotter()
         int adjMat[n][n];
         int stack[n];
 
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++)
                 adjMat[i][j] = 0;
+        }
+
+        for(int i = 0; i < n - 1; i++){
+            adjMat[i][i + 1] = 1;
         }
 
         count = 0;

@@ -5,19 +5,19 @@
 
 int n, count;
 
-void dijkstra(int cost[n][n], int src, int printDist)
+void dijkstra(int cost[n][n], int source, int printDist)
 {
-    int dist[n], visited[n];
+    int dist[n], vis[n];
     count = 0;
 
     for (int i = 0; i < n; i++)
     {
-        dist[i] = cost[src][i];
-        visited[i] = 0;
+        dist[i] = cost[source][i];
+        vis[i] = 0;
     }
 
-    dist[src] = 0;
-    visited[src] = 1;
+    dist[source] = 0;
+    vis[source] = 1;
 
     for (int i = 0; i < n - 1; i++)
     {
@@ -26,20 +26,22 @@ void dijkstra(int cost[n][n], int src, int printDist)
         for (int j = 0; j < n; j++)
         {
             count++;
-            if (!visited[j] && dist[j] < min)
+            if (!vis[j] && dist[j] < min)
             {
                 min = dist[j];
                 u = j;
             }
         }
 
-        if (u == -1) break;
-        visited[u] = 1;
+        if (u == -1)
+            break;
+
+        vis[u] = 1;
 
         for (int v = 0; v < n; v++)
         {
             count++;
-            if (!visited[v] && cost[u][v] != INT_MAX && dist[u] + cost[u][v] < dist[v])
+            if (!vis[v] && cost[u][v] != INT_MAX && dist[u] + cost[u][v] < dist[v])
             {
                 dist[v] = dist[u] + cost[u][v];
             }
@@ -48,7 +50,7 @@ void dijkstra(int cost[n][n], int src, int printDist)
 
     if (printDist)
     {
-        printf("\nShortest path distances from source vertex %d:\n", src);
+        printf("\nShortest path distances from source vertex %d:\n", source);
         for (int i = 0; i < n; i++)
         {
             if (dist[i] == INT_MAX)
@@ -65,21 +67,22 @@ void tester()
     printf("Enter number of vertices: ");
     scanf("%d", &n);
 
-    int cost[n][n], src;
+    int cost[n][n], source;
     printf("Enter cost matrix (%dx%d) [Use -1 for infinity]:\n", n, n);
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
             scanf("%d", &cost[i][j]);
-            if (cost[i][j] == -1) cost[i][j] = INT_MAX;
+            if (cost[i][j] == -1) 
+                cost[i][j] = INT_MAX;
         }
     }
 
     printf("Enter source vertex (0 to %d): ", n - 1);
-    scanf("%d", &src);
+    scanf("%d", &source);
 
-    dijkstra(cost, src, 1);
+    dijkstra(cost, source, 1);
     printf("Operation Count = %d\n", count);
 }
 

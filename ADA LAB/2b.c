@@ -4,18 +4,18 @@
 
 int count;
 
-int binarySearch(int key, int *a, int high, int low)
+int binarySearch(int key, int *arr, int high, int low)
 {
     count++;
     int mid = (high + low) / 2;
     if (low > high)
         return -1;
-    if (*(a + mid) == key)
+    if (*(arr + mid) == key)
         return mid;
-    else if (*(a + mid) > key)
-        return binarySearch(key, a, mid - 1, low);
+    else if (*(arr + mid) > key)
+        return binarySearch(key, arr, mid - 1, low);
     else
-        return binarySearch(key, a, high, mid + 1);
+        return binarySearch(key, arr, high, mid + 1);
 }
 
 void tester()
