@@ -113,15 +113,13 @@ void plotter()
             indeg[i] = 0;
 
         for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                mat[i][j] = 0;
-
-        for (int i = 0; i < n; i++)
         {
-            for (int j = i + 1; j < n; j++)
+            for (int j = 0; j < n; j++)
             {
-                mat[i][j] = 1;
-                indeg[j]++;
+                if (j > i)
+                    mat[i][j] = 1;
+                else
+                    mat[i][j] = 0;
             }
         }
 

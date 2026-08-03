@@ -40,6 +40,7 @@ void prims(int cost[n][n], int printMST)
                 printf("Graph is disconnected!\n");
             return;
         }
+        
         vis[u] = 1;
 
         for (int v = 0; v < n; v++)

@@ -56,7 +56,7 @@ void tester()
     printf("Enter number of vertices: ");
     scanf("%d", &n);
 
-    int adjMat[n][n];
+    int mat[n][n];
     int stack[n];
 
     printf("Enter the adjacency matrix (%dx%d):\n", n, n);
@@ -64,14 +64,14 @@ void tester()
     {
         for (int j = 0; j < n; j++)
         {
-            scanf("%d", &adjMat[i][j]);
+            scanf("%d", &mat[i][j]);
         }
     }
 
     count = 0;
     top = -1;
 
-    int isCyclic = topologicalSort(adjMat, stack);
+    int isCyclic = topologicalSort(mat, stack);
 
     if (isCyclic)
     {
@@ -101,22 +101,22 @@ void plotter()
     {
         n = k;
 
-        int adjMat[n][n];
+        int mat[n][n];
         int stack[n];
 
         for(int i = 0; i < n; i++){
             for(int j = 0; j < n; j++)
-                adjMat[i][j] = 0;
+                mat[i][j] = 0;
         }
 
         for(int i = 0; i < n - 1; i++){
-            adjMat[i][i + 1] = 1;
+            mat[i][i + 1] = 1;
         }
 
         count = 0;
         top = -1;
 
-        topologicalSort(adjMat, stack);
+        topologicalSort(mat, stack);
 
         fprintf(fb, "%d\t%d\n", n, count);
 
@@ -125,16 +125,16 @@ void plotter()
             for (int j = 0; j < n; j++)
             {
                 if (j > i)
-                    adjMat[i][j] = 1;
+                    mat[i][j] = 1;
                 else
-                    adjMat[i][j] = 0;
+                    mat[i][j] = 0;
             }
         }
 
         count = 0;
         top = -1;
 
-        topologicalSort(adjMat, stack);
+        topologicalSort(mat, stack);
 
         fprintf(fw, "%d\t%d\n", n, count);
     }
